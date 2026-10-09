@@ -37,16 +37,17 @@
     </div>`;
   }
 
-  const badge = (tag) => tag ? `<span class="badge ${tag}">${{ booked: '予約済', plan: '予定', tip: 'TIP' }[tag]}</span>` : '';
+  const badge = (tag) => tag ? `<span class="badge ${tag}">${{ booked: '予約済', plan: '予定', tip: 'TIP', sleep: '睡眠' }[tag]}</span>` : '';
 
   function timelineItem(it) {
     if (it.move) {
       return `<li class="tl-item is-move reveal"><div class="tl-time">${it.time}</div><div class="tl-body">${ticket(MOVES[it.move])}</div></li>`;
     }
     const p = it.place && PLACES[it.place];
-    return `<li class="tl-item reveal"><div class="tl-time">${esc(it.time)}</div><div class="tl-body">
+    return `<li class="tl-item reveal${it.tag === 'sleep' ? ' is-sleep' : ''}"><div class="tl-time">${esc(it.time)}</div><div class="tl-body">
       <h3>${esc(it.title)} ${badge(it.tag)}</h3>
       ${it.note ? `<p>${esc(it.note)}</p>` : ''}
+      ${it.jet ? `<div class="tl-actions"><a class="btn-link in-site" href="#/info/jetlag">時差ボケ対策を詳しく</a></div>` : ''}
       ${p ? `<div class="tl-actions"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">経路案内</a></div>` : ''}
     </div></li>`;
   }
@@ -315,6 +316,19 @@
         <ul class="check">${INFO.checklist.map((c, i) => `<li><label><input type="checkbox" data-i="${i}" ${checked[i] ? 'checked' : ''}><span>${esc(c)}</span></label></li>`).join('')}</ul>
         <p class="muted" style="font-size:12px;margin-top:8px">チェックはこの端末にだけ保存されます。</p>
       </section>
+      <section class="section" id="info-jetlag">
+        <div class="section-title"><h2>時差ボケ対策</h2><span class="display">Jet lag</span></div>
+        <p style="font-size:13.5px">${esc(INFO.jetlag.lead)}</p>
+        ${INFO.jetlag.legs.map((leg) => `
+          <p class="sub-h">${esc(leg.h)}</p>
+          <ol class="jet-list">${leg.rows.map((r) => `<li class="${r.sleep ? 'is-sleep' : ''}">
+            <div class="jet-k">${esc(r.k)}</div>
+            <div class="jet-t"><span>スペイン ${esc(r.es)}</span><span>日本 ${esc(r.jp)}</span></div>
+            <div class="jet-act">${esc(r.act)}</div>
+          </li>`).join('')}</ol>`).join('')}
+        <p class="sub-h">コツ</p>
+        <ul class="notes">${INFO.jetlag.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+      </section>
       <section class="section">
         <div class="section-title"><h2>緊急連絡先</h2><span class="display">Emergencia</span></div>
         <ul class="tel-list card">${INFO.emergency.map((e) => `<li><span>${esc(e.k)}</span><a href="tel:${e.v.replace(/-/g, '')}">${esc(e.v)}</a></li>`).join('')}</ul>
@@ -343,7 +357,7 @@
       case 'map': view = viewMap(arg); break;
       case 'airports': view = viewAirports(); anchor = arg && 'ap-' + arg; break;
       case 'souvenirs': view = viewSouvenirs(); break;
-      case 'info': view = viewInfo(); break;
+      case 'info': view = viewInfo(); anchor = arg && 'info-' + arg; break;
       default: view = viewHome(); tab = 'home';
     }
     if (typeof view === 'string') view = { html: view };
