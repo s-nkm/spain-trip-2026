@@ -70,7 +70,7 @@ window.PLACES = {
 
 // 移動（チケット風カード）
 window.MOVES = {
-  ey801: { type: 'flight', code: 'EY801', carrier: 'エティハド航空', from: { code: 'NRT', city: '東京 成田', term: 'T1' }, to: { code: 'AUH', city: 'アブダビ', term: 'A' }, dep: '18:00', arr: '00:20', arrNote: '+1', dur: '約12時間20分', note: 'スルーバゲージ（荷物はマドリードまで）' },
+  ey801: { type: 'flight', code: 'EY801', carrier: 'エティハド航空', from: { code: 'NRT', city: '東京 成田', term: 'T1' }, to: { code: 'AUH', city: 'アブダビ', term: 'A' }, dep: '18:00', arr: '00:20', arrNote: '+1', dur: '約11時間20分', note: 'スルーバゲージ（荷物はマドリードまで）' },
   ey101: { type: 'flight', code: 'EY101', carrier: 'エティハド航空', from: { code: 'AUH', city: 'アブダビ', term: 'A' }, to: { code: 'MAD', city: 'マドリード', term: 'T4' }, dep: '02:25', arr: '08:10', dur: '約7時間45分', note: '乗継時間 2時間5分' },
   toledoGo: { type: 'train', code: 'Renfe', carrier: '鉄道（直通）', from: { code: 'MAD', city: 'アトーチャ駅' }, to: { code: 'TOL', city: 'トレド駅' }, dep: '11:15', arr: '11:49', dur: '34分', note: '予約済み・乗換なし' },
   toledoBack: { type: 'train', code: 'Renfe', carrier: '鉄道（直通）', from: { code: 'TOL', city: 'トレド駅' }, to: { code: 'MAD', city: 'アトーチャ駅' }, dep: '17:23', arr: '17:57', dur: '34分', note: '予約済み・乗換なし' },
