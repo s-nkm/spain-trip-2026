@@ -134,7 +134,7 @@
     const n = daysUntil();
     let cd = '';
     if (td) cd = `<div class="countdown reveal t-${td.theme}"><div><div class="lbl">今日は DAY ${td.n}</div><div class="h-serif" style="font-size:18px">${esc(td.city)}</div></div><a class="chip on" href="#/day/${td.n}">今日の予定 →</a></div>`;
-    else if (n > 0) cd = `<div class="countdown reveal"><div><div class="lbl">出発まであと</div><div><span class="num">${n}</span> <span class="lbl">日</span></div></div><a class="chip" href="#/info">持ち物チェック →</a></div>`;
+    else if (n > 0) cd = `<div class="countdown reveal"><div class="cd-text"><div class="lbl">出発まであと</div><div class="cd-val"><span class="num">${n}</span><span class="lbl">日</span></div></div><a class="chip" href="#/info">持ち物チェック →</a></div>`;
 
     return `
       <section class="hero">
@@ -142,7 +142,10 @@
         <h1 class="reveal">Viaje a <span>España</span></h1>
         <p class="hero-sub reveal">${esc(TRIP.travelers)}でめぐる、8日間のスペイン。</p>
       </section>
-      <div class="hero-art reveal">${heroArt}</div>
+      <figure class="hero-photo reveal">
+        <picture><source srcset="img/hero.avif" type="image/avif"><img src="img/hero.jpg" alt="トレド旧市街とタホ川の夕景" width="1742" height="1160" fetchpriority="high"></picture>
+        <figcaption>Toledo</figcaption>
+      </figure>
       <div class="route-line reveal"><b>NRT</b>→ AUH →<b>MADRID</b>→<b>TOLEDO</b>→<b>GRANADA</b>→<b>BARCELONA</b>→ AUH →<b>NRT</b></div>
       ${cd}
       <section class="section">
