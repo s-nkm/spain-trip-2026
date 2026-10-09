@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Viaje a España — 旅のしおり</title>
+  <meta name="description" content="スペイン家族旅行 2026（10/14〜10/21）の旅のしおり">
+  <meta name="theme-color" content="#F4EEE3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1A1613" media="(prefers-color-scheme: dark)">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Mono:wght@400;500&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="#/" class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Viaje a España</span></a>
+    <span class="topbar-date" id="topbar-date"></span>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <nav class="tabbar" aria-label="メインメニュー">
+    <a href="#/" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span>ホーム</span></a>
+    <a href="#/day" data-tab="day"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>日程</span></a>
+    <a href="#/map" data-tab="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z M9 4v14 M15 6v14"/></svg><span>地図</span></a>
+    <a href="#/airports" data-tab="airports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15l18-6-2-2-7 2-5-5-2 1 3 5-4 1-2-2-1 1 2 4z M4 20h16"/></svg><span>空港</span></a>
+    <a href="#/souvenirs" data-tab="souvenirs"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16v11H4z M2 6h20v3H2z M12 6v14 M12 6c-2-4-6-3-5 0 M12 6c2-4 6-3 5 0"/></svg><span>お土産</span></a>
+    <a href="#/info" data-tab="info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6 M12 7.5v.5"/></svg><span>情報</span></a>
+  </nav>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
