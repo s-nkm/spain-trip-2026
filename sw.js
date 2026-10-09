@@ -1,5 +1,5 @@
 // オフライン対応：アプリ本体は事前キャッシュ、地図タイルなどは見たものを順次キャッシュ
-const VERSION = 'v8';
+const VERSION = 'v9';
 const SHELL = ['./', 'index.html', 'css/style.css', 'js/data.js', 'js/app.js', 'img/icon.svg', 'img/hero.avif', 'img/hero.jpg', 'manifest.webmanifest',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
   'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css', 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js', 'https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.0/leaflet-maplibre-gl.js'];
