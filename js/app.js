@@ -47,7 +47,7 @@
     return `<li class="tl-item reveal"><div class="tl-time">${esc(it.time)}</div><div class="tl-body">
       <h3>${esc(it.title)} ${badge(it.tag)}</h3>
       ${it.note ? `<p>${esc(it.note)}</p>` : ''}
-      ${p ? `<div class="tl-actions"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">ここへ行く</a></div>` : ''}
+      ${p ? `<div class="tl-actions"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">経路案内</a></div>` : ''}
     </div></li>`;
   }
 
@@ -56,13 +56,36 @@
   }
 
   // ---------- map ----------
+  // ベース地図：OpenFreeMap のベクター地図。地名は日本語名があれば日本語、なければ現地語
+  const STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+  const JA_NAME = ['coalesce', ['get', 'name:ja'], ['get', 'name']];
+  let stylePromise;
+  function jaStyle() {
+    stylePromise = stylePromise || fetch(STYLE_URL).then((r) => r.json()).then((style) => {
+      style.layers.forEach((l) => { if (l.layout && l.layout['text-field']) l.layout['text-field'] = JA_NAME; });
+      return style;
+    });
+    return stylePromise;
+  }
+  function osmRaster(map) {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+  }
+  function addBaseLayer(map) {
+    if (!L.maplibreGL || !window.maplibregl) { osmRaster(map); return; }
+    jaStyle().then((style) => {
+      L.maplibreGL({
+        style, localIdeographFontFamily: "'Hiragino Sans', 'Noto Sans JP', sans-serif",
+        attribution: '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+      }).addTo(map);
+    }).catch(() => osmRaster(map)); // 取得できないとき（オフライン等）は通常の地図
+  }
+
   function makeMap(el, { placeIds, routes = [], fitPad = 30 }) {
     if (!window.L) { el.innerHTML = '<p class="section muted">地図を読み込めませんでした（オフライン）。</p>'; return; }
     const map = L.map(el, { zoomControl: true, scrollWheelZoom: false, zoomSnap: 0.25 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    addBaseLayer(map);
 
     const stroke = { flight: color('cobalt'), train: color('terra'), car: color('olive'), walk: color('muted') };
     routes.forEach(([a, b, mode]) => {
@@ -82,7 +105,7 @@
       const k = KIND[p.kind] || KIND.sight;
       const icon = L.divIcon({ className: '', html: `<div class="pin" style="--pin:${color(k.c) || color('ink')}"><span>${k.l}</span></div>`, iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
       L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(
-        `<b>${esc(p.name)}</b><br><span style="opacity:.7">${esc(p.en)}</span>${p.addr ? `<br>${esc(p.addr)}` : ''}${p.tel ? `<br><a href="tel:${p.tel}">${p.tel}</a>` : ''}<br><a href="${gmaps(p)}" target="_blank" rel="noopener">Googleマップ ↗</a>　<a href="${gdir(p)}" target="_blank" rel="noopener">経路 ↗</a>`
+        `<b>${esc(p.name)}</b><br><span style="opacity:.7">${esc(p.en)}</span>${p.addr ? `<br>${esc(p.addr)}` : ''}${p.tel ? `<br><a href="tel:${p.tel}">${p.tel}</a>` : ''}<br><a href="${gmaps(p)}" target="_blank" rel="noopener">Googleマップ ↗</a>　<a href="${gdir(p)}" target="_blank" rel="noopener">経路案内 ↗</a>`
       );
       bounds.push([p.lat, p.lng]);
     });
@@ -276,7 +299,7 @@
         ${HOTELS.map((h) => { const p = PLACES[h.place]; return `<article class="card reveal">
           <span class="eyebrow">${esc(h.city)}</span><h3 style="margin-top:4px">${esc(p.name)}</h3><span class="display muted" style="font-size:16px">${esc(p.en)}</span>
           <dl class="kv"><dt>宿泊</dt><dd>${esc(h.nights)}</dd><dt>チェックイン</dt><dd>${esc(h.in)}</dd><dt>チェックアウト</dt><dd>${esc(h.out)}</dd><dt>部屋</dt><dd>${esc(h.room)}</dd><dt>食事</dt><dd>${esc(h.meal)}</dd><dt>住所</dt><dd>${esc(p.addr)}</dd><dt>電話</dt><dd><a href="tel:${p.tel}">${p.tel}</a></dd><dt>メモ</dt><dd>${esc(h.note)}</dd></dl>
-          <div style="margin-top:12px;display:flex;gap:16px"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">ここへ行く</a></div>
+          <div style="margin-top:12px;display:flex;gap:16px"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">経路案内</a></div>
         </article>`; }).join('')}
         <p class="muted" style="font-size:12px;margin-top:12px">確認番号・予約番号は、予約確認書PDFの原本を見てください。</p>
       </section>

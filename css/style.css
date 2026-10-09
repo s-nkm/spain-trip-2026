@@ -302,7 +302,7 @@ body { transition: background-color .3s, color .3s; }
 }
 
 /* 地図タイルを紙っぽいトーンに */
-.leaflet-tile-pane { filter: sepia(.28) saturate(.75) brightness(1.02); }
+.leaflet-tile-pane { filter: sepia(.18) saturate(.85); }
 [data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) sepia(.2) saturate(.6) brightness(.9) contrast(.9); }
 [data-theme="dark"] .leaflet-container { background: #1A1613; }
 
