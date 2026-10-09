@@ -1,5 +1,5 @@
 (() => {
-  const { TRIP, PLACES, MOVES, DAYS, HOTELS, AIRPORTS, SOUVENIRS, SOUVENIR_NOTES, INFO } = window;
+  const { TRIP, PLACES, MOVES, DAYS, HOTELS, AIRPORTS, SOUVENIRS, SOUVENIR_NOTES, INFO, PHRASES } = window;
   const app = document.getElementById('app');
   const DARK = window.matchMedia('(prefers-color-scheme: dark)');
   let maps = [];
@@ -186,6 +186,8 @@
           <a href="#/airports" class="reveal t-cobalt"><span class="display">Aeropuertos</span><span>空港の歩き方</span></a>
           <a href="#/souvenirs" class="reveal t-saffron"><span class="display">Recuerdos</span><span>お土産ガイド</span></a>
           <a href="#/info" class="reveal t-olive"><span class="display">Información</span><span>ホテル・持ち物・緊急連絡先</span></a>
+          <a href="#/phrases" class="reveal t-terra"><span class="display">Frases</span><span>よく使うスペイン語</span></a>
+          <a href="#/info/jetlag" class="reveal t-cobalt"><span class="display">Jet lag</span><span>時差ボケ対策</span></a>
         </div>
       </section>
       ${footer()}`;
@@ -290,6 +292,46 @@
       ${footer()}`;
   }
 
+  const speakerIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+  const canSpeak = 'speechSynthesis' in window;
+
+  function speak(text, lang) {
+    if (!canSpeak) return;
+    const voices = speechSynthesis.getVoices();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.85;
+    u.voice = voices.find((v) => v.lang.replace('_', '-') === lang) || voices.find((v) => v.lang.startsWith('es')) || null;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }
+
+  function viewPhrases() {
+    return {
+      html: `
+      <section class="section">
+        <div class="section-title"><h2>フレーズ集</h2><span class="display">Frases</span></div>
+        <p class="muted" style="font-size:13px">${canSpeak ? 'スピーカーのボタンで発音を聞けます。そのまま相手に聞かせてもOK。' : 'カタカナはおおよその読み方です。'}</p>
+        <div class="chips" style="margin-top:14px">${PHRASES.map((g, i) => `<a class="chip" href="#/phrases/${i}">${esc(g.h)}</a>`).join('')}</div>
+      </section>
+      ${PHRASES.map((g, gi) => `
+        <div class="tile-band"></div>
+        <section class="section" id="info-ph${gi}">
+          <div class="sv-head reveal"><h3>${esc(g.h)}</h3><span class="display">${esc(g.en)}</span></div>
+          ${g.note ? `<p class="muted" style="font-size:12.5px;margin-top:10px">${esc(g.note)}</p>` : ''}
+          <ul class="phrase-list">${g.items.map((p) => `<li class="reveal">
+            <div class="ph-text"><div class="ph-es" lang="${p.lang || 'es-ES'}">${esc(p.es)}</div><div class="ph-kana">${esc(p.kana)}</div><div class="ph-ja">${esc(p.ja)}</div></div>
+            ${canSpeak ? `<button type="button" class="ph-say" data-say="${esc(p.es)}" data-lang="${p.lang || 'es-ES'}" aria-label="${esc(p.es)} を読み上げ">${speakerIcon}</button>` : ''}
+          </li>`).join('')}</ul>
+        </section>`).join('')}
+      ${footer()}`,
+      after: () => {
+        if (canSpeak) speechSynthesis.getVoices();
+        app.querySelectorAll('.ph-say').forEach((b) => b.addEventListener('click', () => speak(b.dataset.say.replace(' / ', ', '), b.dataset.lang)));
+      },
+    };
+  }
+
   function viewInfo() {
     let checked = {};
     try { checked = JSON.parse(localStorage.getItem('checklist') || '{}'); } catch (e) { /* ignore */ }
@@ -358,6 +400,7 @@
       case 'airports': view = viewAirports(); anchor = arg && 'ap-' + arg; break;
       case 'souvenirs': view = viewSouvenirs(); break;
       case 'info': view = viewInfo(); anchor = arg && 'info-' + arg; break;
+      case 'phrases': view = viewPhrases(); tab = 'info'; anchor = arg && 'info-ph' + arg; break;
       default: view = viewHome(); tab = 'home';
     }
     if (typeof view === 'string') view = { html: view };

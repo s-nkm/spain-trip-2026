@@ -418,3 +418,66 @@ window.INFO = {
     'Visit Japan Web の登録（帰国用）', 'ブエリングのオンラインチェックイン（10/17）', 'グラナダの空港タクシー予約（10/17）', 'トレド・AVEのチケットをスマホに保存',
   ],
 };
+
+// フレーズ集（lang: 読み上げ言語）
+window.PHRASES = [
+  {
+    h: 'あいさつ', en: 'Saludos', items: [
+      { es: 'Hola', kana: 'オラ', ja: 'こんにちは（いつでも使える）' },
+      { es: 'Buenos días', kana: 'ブエノス ディアス', ja: 'おはようございます（昼食まで）' },
+      { es: 'Buenas tardes', kana: 'ブエナス タルデス', ja: 'こんにちは（昼食後〜夕方）' },
+      { es: 'Buenas noches', kana: 'ブエナス ノチェス', ja: 'こんばんは／おやすみなさい' },
+      { es: 'Adiós', kana: 'アディオス', ja: 'さようなら' },
+      { es: 'Hasta luego', kana: 'アスタ ルエゴ', ja: 'またね（お店を出るときにも）' },
+    ],
+  },
+  {
+    h: '基本', en: 'Básico', items: [
+      { es: 'Gracias', kana: 'グラシアス', ja: 'ありがとう' },
+      { es: 'Muchas gracias', kana: 'ムチャス グラシアス', ja: 'どうもありがとう' },
+      { es: 'Por favor', kana: 'ポル ファボール', ja: 'お願いします' },
+      { es: 'De nada', kana: 'デ ナダ', ja: 'どういたしまして' },
+      { es: 'Perdón', kana: 'ペルドン', ja: 'すみません（通してください／ごめんなさい）' },
+      { es: 'Disculpe', kana: 'ディスクルペ', ja: 'すみません（呼び止めるとき）' },
+      { es: 'Sí / No', kana: 'シ／ノ', ja: 'はい／いいえ' },
+      { es: 'Vale', kana: 'バレ', ja: 'OK・了解（スペインでよく使う）' },
+    ],
+  },
+  {
+    h: 'レストラン・お店', en: 'Restaurante y tiendas', items: [
+      { es: 'Una mesa para tres, por favor', kana: 'ウナ メサ パラ トレス、ポル ファボール', ja: '3人です（席をお願いします）' },
+      { es: 'La carta, por favor', kana: 'ラ カルタ、ポル ファボール', ja: 'メニューをください' },
+      { es: '¿Qué me recomienda?', kana: 'ケ メ レコミエンダ？', ja: 'おすすめは何ですか？' },
+      { es: 'Esto, por favor', kana: 'エスト、ポル ファボール', ja: 'これをください（指さしで）' },
+      { es: 'Agua sin gas', kana: 'アグア シン ガス', ja: '炭酸なしの水' },
+      { es: 'Está muy rico', kana: 'エスタ ムイ リコ', ja: 'とてもおいしいです' },
+      { es: 'La cuenta, por favor', kana: 'ラ クエンタ、ポル ファボール', ja: 'お会計をお願いします' },
+      { es: '¿Puedo pagar con tarjeta?', kana: 'プエド パガール コン タルヘタ？', ja: 'カードで払えますか？' },
+      { es: '¿Cuánto cuesta?', kana: 'クアント クエスタ？', ja: 'いくらですか？' },
+      { es: 'Solo estoy mirando', kana: 'ソロ エストイ ミランド', ja: '見ているだけです' },
+      { es: 'Tax free, por favor', kana: 'タックス フリー、ポル ファボール', ja: '免税の書類をお願いします' },
+    ],
+  },
+  {
+    h: '移動・困ったとき', en: 'Transporte y ayuda', items: [
+      { es: '¿Dónde está el baño?', kana: 'ドンデ エスタ エル バーニョ？', ja: 'トイレはどこですか？' },
+      { es: '¿Dónde está la estación?', kana: 'ドンデ エスタ ラ エスタシオン？', ja: '駅はどこですか？' },
+      { es: 'A esta dirección, por favor', kana: 'ア エスタ ディレクシオン、ポル ファボール', ja: 'この住所までお願いします（タクシーで画面を見せて）' },
+      { es: 'Al aeropuerto, por favor', kana: 'アル アエロプエルト、ポル ファボール', ja: '空港までお願いします' },
+      { es: 'No hablo español', kana: 'ノ アブロ エスパニョール', ja: 'スペイン語は話せません' },
+      { es: '¿Habla inglés?', kana: 'アブラ イングレス？', ja: '英語を話せますか？' },
+      { es: '¡Ayuda!', kana: 'アユダ！', ja: '助けて！' },
+      { es: 'Necesito un médico', kana: 'ネセシト ウン メディコ', ja: '医者が必要です' },
+      { es: 'Me han robado', kana: 'メ アン ロバード', ja: '盗まれました' },
+    ],
+  },
+  {
+    h: 'バルセロナで（カタルーニャ語）', en: 'Català', note: 'スペイン語でも通じます。ひと言添えると喜ばれます。', items: [
+      { es: 'Bon dia', kana: 'ボン ディア', ja: 'おはよう／こんにちは', lang: 'ca-ES' },
+      { es: 'Bona tarda', kana: 'ボナ タルダ', ja: 'こんにちは（午後）', lang: 'ca-ES' },
+      { es: 'Gràcies', kana: 'グラシエス', ja: 'ありがとう', lang: 'ca-ES' },
+      { es: 'Si us plau', kana: 'シウスプラウ', ja: 'お願いします', lang: 'ca-ES' },
+      { es: 'Adéu', kana: 'アデウ', ja: 'さようなら', lang: 'ca-ES' },
+    ],
+  },
+];
