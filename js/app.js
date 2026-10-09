@@ -28,15 +28,12 @@
   const trainIcon = '<svg viewBox="0 0 54 18"><path d="M2 9h50M2 13h50M10 5v12M22 5v12M34 5v12M46 5v12"/></svg>';
 
   function ticket(m) {
+    const end = (e, t, note, r) => `<div class="tk-end${r ? ' r' : ''}"><div class="code">${esc(e.code)}</div><div class="city">${esc(e.city)}${e.term ? ' ' + esc(e.term) : ''}</div><div class="time">${t}${note ? `<sup> ${note}</sup>` : ''}</div></div>`;
     return `<div class="ticket ${m.type}">
       <div class="ticket-top"><span>${m.type === 'flight' ? 'FLIGHT' : 'TRAIN'} · <b>${esc(m.code)}</b></span><span>${esc(m.dur)}</span></div>
-      <div class="ticket-main">
-        <div><div class="code">${esc(m.from.code)}</div><div class="city">${esc(m.from.city)}${m.from.term ? ' ' + esc(m.from.term) : ''}</div><div class="time">${m.dep}</div></div>
-        <div class="ticket-mid">${m.type === 'flight' ? planeIcon : trainIcon}${esc(m.carrier)}</div>
-        <div class="r"><div class="code">${esc(m.to.code)}</div><div class="city">${esc(m.to.city)}${m.to.term ? ' ' + esc(m.to.term) : ''}</div><div class="time">${m.arr}${m.arrNote ? `<sup> ${m.arrNote}</sup>` : ''}</div></div>
-      </div>
+      <div class="ticket-main">${end(m.from, m.dep)}<div class="ticket-mid">${m.type === 'flight' ? planeIcon : trainIcon}</div>${end(m.to, m.arr, m.arrNote, true)}</div>
       <div class="ticket-cut"></div>
-      <div class="ticket-foot"><span>${esc(m.note || '')}</span></div>
+      <div class="ticket-foot">${esc(m.carrier)}${m.note ? ' ・ ' + esc(m.note) : ''}</div>
     </div>`;
   }
 
@@ -61,7 +58,7 @@
   // ---------- map ----------
   function makeMap(el, { placeIds, routes = [], fitPad = 30 }) {
     if (!window.L) { el.innerHTML = '<p class="section muted">地図を読み込めませんでした（オフライン）。</p>'; return; }
-    const map = L.map(el, { zoomControl: true, scrollWheelZoom: false, tap: true });
+    const map = L.map(el, { zoomControl: true, scrollWheelZoom: false, zoomSnap: 0.25 });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -184,7 +181,7 @@
           <span class="en">${esc(d.cityEn)}</span>
         </section>
         <p class="day-lead">${esc(d.headline)}。${esc(d.lead)}</p>
-        <div class="tile-band" style="margin-top:18px"></div>
+        <div class="tile-band" style="margin-top:22px"></div>
         <ol class="timeline">${d.items.map(timelineItem).join('')}</ol>
         ${d.places.length > 1 ? `<section style="margin-top:24px"><div class="section" style="padding-bottom:12px"><div class="section-title" style="margin:0"><h2>この日の地図</h2><span class="display">Ruta</span></div></div><div id="day-map" class="map"></div>${legend}</section>` : ''}
         ${nb ? `<section class="section">
@@ -211,7 +208,7 @@
         <div class="chips">${opts.map(([k, l]) => `<a class="chip ${k === cur ? 'on' : ''}" href="#/map/${k}">${esc(l)}</a>`).join('')}</div>
       </section>
       <div id="all-map" class="map tall"></div>${legend}
-      <p class="section muted" style="font-size:12.5px;padding-top:4px">ピンをタップすると、Googleマップでの表示や経路案内に進めます。ピンの位置は目安です。</p>`;
+      <p class="section muted" style="font-size:12.5px;padding-top:12px">ピンをタップすると、Googleマップでの表示や経路案内に進めます。ピンの位置は目安です。</p>`;
     return {
       html, after: () => {
         let placeIds, routes;
@@ -297,7 +294,7 @@
       </section>
       <section class="section">
         <div class="section-title"><h2>緊急連絡先</h2><span class="display">Emergencia</span></div>
-        <dl class="kv card" style="margin:0">${INFO.emergency.map((e) => `<dt>${esc(e.k)}</dt><dd><a href="tel:${e.v.replace(/-/g, '')}" style="font-family:var(--mono);font-size:15px">${esc(e.v)}</a></dd>`).join('')}</dl>
+        <ul class="tel-list card">${INFO.emergency.map((e) => `<li><span>${esc(e.k)}</span><a href="tel:${e.v.replace(/-/g, '')}">${esc(e.v)}</a></li>`).join('')}</ul>
       </section>
       <section class="section">
         <div class="section-title"><h2>旅のメモ</h2><span class="display">Consejos</span></div>

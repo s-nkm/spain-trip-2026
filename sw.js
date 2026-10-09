@@ -1,5 +1,5 @@
 // オフライン対応：アプリ本体は事前キャッシュ、地図タイルなどは見たものを順次キャッシュ
-const VERSION = 'v4';
+const VERSION = 'v5';
 const SHELL = ['./', 'index.html', 'css/style.css', 'js/data.js', 'js/app.js', 'img/icon.svg', 'img/hero.avif', 'img/hero.jpg', 'manifest.webmanifest',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
 
