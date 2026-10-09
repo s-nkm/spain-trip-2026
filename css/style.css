@@ -194,11 +194,11 @@ body { transition: background-color .3s, color .3s; }
 .tl-item.is-move::after { background: var(--accent); }
 
 /* ticket */
-.ticket { background: var(--ticket); border: 1px solid var(--line); position: relative; font-family: var(--mono); }
-.ticket-top { padding: 14px 18px 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; font-size: 10.5px; letter-spacing: .08em; color: var(--muted); }
+.ticket { --tx: 24px; max-width: 520px; background: var(--ticket); border: 1px solid var(--line); position: relative; font-family: var(--mono); }
+.ticket-top { padding: 18px var(--tx) 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; font-size: 10.5px; letter-spacing: .08em; color: var(--muted); }
 .ticket-top b { color: var(--accent); font-weight: 500; }
 .ticket-top .carrier { font-family: var(--sans); letter-spacing: .02em; }
-.ticket-main { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; padding: 0 18px 16px; }
+.ticket-main { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; padding: 0 var(--tx) 18px; }
 .tk-end { min-width: 0; }
 .tk-end.r { text-align: right; }
 .ticket-main .code { font-size: 30px; font-weight: 500; letter-spacing: -.02em; line-height: 1; }
@@ -207,11 +207,11 @@ body { transition: background-color .3s, color .3s; }
 .ticket-main .time sup { color: var(--terra); font-size: 10px; }
 .ticket-mid { color: var(--accent); }
 .ticket-mid svg { width: 40px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.4; }
-.ticket-cut { border-top: 1.5px dashed var(--line); margin: 0 14px; position: relative; }
+.ticket-cut { border-top: 1.5px dashed var(--line); margin: 0 calc(var(--tx) - 6px); position: relative; }
 .ticket-cut::before, .ticket-cut::after { content: ''; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 1px solid var(--line); }
-.ticket-cut::before { left: -23px; clip-path: inset(0 0 0 50%); }
-.ticket-cut::after { right: -23px; clip-path: inset(0 50% 0 0); }
-.ticket-foot { padding: 12px 18px 14px; font-family: var(--sans); font-size: 12px; line-height: 1.6; color: var(--muted); }
+.ticket-cut::before { left: calc(-1 * var(--tx) - 3px); clip-path: inset(0 0 0 50%); }
+.ticket-cut::after { right: calc(-1 * var(--tx) - 3px); clip-path: inset(0 50% 0 0); }
+.ticket-foot { padding: 14px var(--tx) 18px; font-family: var(--sans); font-size: 12px; line-height: 1.6; color: var(--muted); }
 .ticket.train { background: var(--accent); color: #fff; border-color: transparent; }
 .ticket.train :is(.ticket-top, .ticket-top b, .city, .ticket-mid, .ticket-foot) { color: rgba(255,255,255,.88); }
 .ticket.train .ticket-cut { border-color: rgba(255,255,255,.4); }
@@ -294,6 +294,7 @@ body { transition: background-color .3s, color .3s; }
   .section, .hero, .day-hero, .day-lead, .timeline, .day-pager, .route-line { padding-left: 28px; padding-right: 28px; }
   .hero-art, .countdown, .map, .tile-band { margin-left: 28px; margin-right: 28px; }
   .map-legend { padding-left: 28px; padding-right: 28px; }
+  .ticket { --tx: 32px; }
   .quick { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .nearby-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .map { height: 420px; }
