@@ -351,7 +351,26 @@
   }
 
   window.addEventListener('hashchange', render);
-  DARK.addEventListener && DARK.addEventListener('change', render);
+  // テーマ切り替え（選択は端末に保存。未選択なら端末の設定に追従）
+  const themeBtn = document.getElementById('theme-btn');
+  const themeMeta = document.querySelectorAll('meta[name="theme-color"]');
+  function applyTheme(t) {
+    document.documentElement.dataset.theme = t;
+    themeBtn.setAttribute('aria-label', t === 'dark' ? 'デイモードに切り替え' : 'ナイトモードに切り替え');
+    themeMeta.forEach((m) => { m.removeAttribute('media'); m.content = t === 'dark' ? '#1A1613' : '#F4EEE3'; });
+  }
+  applyTheme(document.documentElement.dataset.theme);
+  themeBtn.addEventListener('click', () => {
+    const t = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', t); } catch (e) { /* ignore */ }
+    applyTheme(t);
+    maps.forEach((m) => m.invalidateSize());
+  });
+  DARK.addEventListener && DARK.addEventListener('change', (e) => {
+    let saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (err) { /* ignore */ }
+    if (!saved) { applyTheme(e.matches ? 'dark' : 'light'); render(); }
+  });
   render();
   topbarDate(); setInterval(topbarDate, 30000);
 
