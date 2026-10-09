@@ -139,7 +139,7 @@
     return `
       <section class="hero">
         <div class="eyebrow reveal">${md(TRIP.start)} — ${md(TRIP.end)} ・ 2026</div>
-        <h1 class="reveal">Viaje<br>a <span>España</span></h1>
+        <h1 class="reveal">Viaje a <span>España</span></h1>
         <p class="hero-sub reveal">${esc(TRIP.travelers)}でめぐる、8日間のスペイン。</p>
       </section>
       <div class="hero-art reveal">${heroArt}</div>
