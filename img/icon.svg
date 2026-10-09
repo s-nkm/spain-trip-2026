@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><rect width="180" height="180" fill="#B5532F"/><g transform="translate(30 30)"><rect width="120" height="120" rx="6" fill="#1F4AA8"/><path d="M60 10 C72 36 84 48 110 60 C84 72 72 84 60 110 C48 84 36 72 10 60 C36 48 48 36 60 10Z" fill="#F4EEE3"/><path d="M60 32 C66 46 74 54 88 60 C74 66 66 74 60 88 C54 74 46 66 32 60 C46 54 54 46 60 32Z" fill="#E9B330"/><circle cx="60" cy="60" r="8" fill="#1F4AA8"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 中心(32,32)を基準に上下左右・対角線すべて対称 -->
+  <defs><clipPath id="c"><rect width="64" height="64" rx="12"/></clipPath></defs>
+  <g clip-path="url(#c)">
+    <rect width="64" height="64" fill="#1F4AA8"/>
+    <path d="M0 0H12L0 12Z M64 0H52L64 12Z M0 64H12L0 52Z M64 64H52L64 52Z" fill="#E9B330"/>
+    <path d="M32 6C35 20 44 29 58 32C44 35 35 44 32 58C29 44 20 35 6 32C20 29 29 20 32 6Z" fill="#F4EEE3"/>
+    <path d="M32 18C34 26 38 30 46 32C38 34 34 38 32 46C30 38 26 34 18 32C26 30 30 26 32 18Z" fill="#E9B330"/>
+    <circle cx="32" cy="32" r="4" fill="#1F4AA8"/>
+  </g>
+</svg>
