@@ -147,7 +147,7 @@
         <p class="hero-sub reveal">${esc(TRIP.travelers)}でめぐる、6日間のハノイ・ハロン湾。</p>
       </section>
       <figure class="hero-photo reveal">
-        <img src="img/vietnam-hero.svg" alt="ハロン湾の島々と船を描いたイラスト" width="1200" height="750" fetchpriority="high">
+        <img src="img/vietnam-hero.jpg" alt="ハロン湾の青緑の海と島々" width="1920" height="939" fetchpriority="high">
         <figcaption>Hanoi · Ha Long Bay</figcaption>
       </figure>
       <div class="route-line reveal"><b>NRT</b> → HKG → <b>HANOI</b> ⇄ <b>HA LONG BAY</b> → HKG → <b>NRT</b></div>
