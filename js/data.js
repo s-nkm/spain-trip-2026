@@ -1,483 +1,96 @@
-// 旅のしおりデータ
-// ※ 氏名・eチケット番号・PNR・ホテル確認番号などの個人情報は公開リポジトリのため掲載しない
-// 時刻はすべて現地時刻。座標は目安（ピン位置がずれる場合あり）
-
-window.TRIP = {
-  title: 'Viaje a España',
-  subtitle: 'スペイン家族旅行 2026',
-  start: '2026-10-14',
-  end: '2026-10-21',
-  travelers: '家族3人',
-};
-
-// 地点
+// 出典：ハノイスケジュールv02.pdf。公開用のため氏名・座席割当・予約番号は掲載しない。
+// 時刻は各現地時間。地図の座標と線は目安。
+window.TRIP = { title:'Journey to Vietnam', subtitle:'ベトナム家族旅行 2026', start:'2026-10-14', end:'2026-10-19', travelers:'家族3人', timezone:'Asia/Ho_Chi_Minh', language:'vi-VN' };
 window.PLACES = {
-  nrt: { name: '成田空港 第1ターミナル', en: 'Narita Airport T1', lat: 35.7720, lng: 140.3929, kind: 'airport' },
-  auh: { name: 'アブダビ ザイード国際空港 ターミナルA', en: 'Zayed International Airport', lat: 24.4330, lng: 54.6511, kind: 'airport' },
-  mad: { name: 'マドリード バラハス空港 T4', en: 'Madrid-Barajas T4', lat: 40.4919, lng: -3.5934, kind: 'airport' },
-  grx: { name: 'グラナダ空港', en: 'Granada Airport (GRX)', lat: 37.1887, lng: -3.7774, kind: 'airport' },
-  bcn: { name: 'バルセロナ エル・プラット空港 T1', en: 'Barcelona-El Prat T1', lat: 41.2884, lng: 2.0731, kind: 'airport' },
-
-  atocha: { name: 'マドリード・プエルタ・デ・アトーチャ駅', en: 'Madrid-Puerta de Atocha', lat: 40.4065, lng: -3.6895, kind: 'station' },
-  toledoSt: { name: 'トレド駅', en: 'Estación de Toledo', lat: 39.8622, lng: -4.0119, kind: 'station' },
-  granadaSt: { name: 'グラナダ駅', en: 'Estación de Granada', lat: 37.1843, lng: -3.6097, kind: 'station' },
-
-  hMadrid: { name: 'リウ プラザ エスパーニャ', en: 'Hotel Riu Plaza España', lat: 40.4234, lng: -3.7120, kind: 'hotel', addr: 'Calle Gran Vía, 84, 28013 Madrid', tel: '+34-919-193393' },
-  hGranada: { name: 'ホテル アリクサレス', en: 'Hotel Alixares', lat: 37.1747, lng: -3.5875, kind: 'hotel', addr: 'P.º de la Sabica, 40, 18009 Granada', tel: '+34-958-225575' },
-  hBarcelona: { name: 'ユーロスターズ モニュメンタル', en: 'Eurostars Monumental', lat: 41.4003, lng: 2.1783, kind: 'hotel', addr: 'Carrer del Consell de Cent, 498-500, 08013 Barcelona', tel: '+34-932-320288' },
-
-  // トレド
-  zocodover: { name: 'ソコドベール広場', en: 'Plaza de Zocodover', lat: 39.8588, lng: -4.0220, kind: 'sight' },
-  toledoCat: { name: 'トレド大聖堂', en: 'Catedral Primada de Toledo', lat: 39.8570, lng: -4.0236, kind: 'sight' },
-  alcazar: { name: 'アルカサル', en: 'Alcázar de Toledo', lat: 39.8577, lng: -4.0207, kind: 'sight' },
-  santoTome: { name: 'サント・トメ教会（エル・グレコ）', en: 'Iglesia de Santo Tomé', lat: 39.8567, lng: -4.0272, kind: 'sight' },
-  sanJuan: { name: 'サン・フアン・デ・ロス・レイエス修道院', en: 'Monasterio de San Juan de los Reyes', lat: 39.8592, lng: -4.0302, kind: 'sight' },
-  mirador: { name: 'トレド展望台（ミラドール・デル・バジェ）', en: 'Mirador del Valle', lat: 39.8508, lng: -4.0198, kind: 'sight' },
-
-  // マドリード
-  palacioReal: { name: '王宮', en: 'Palacio Real', lat: 40.4180, lng: -3.7143, kind: 'sight' },
-  plazaMayor: { name: 'マヨール広場', en: 'Plaza Mayor', lat: 40.4155, lng: -3.7074, kind: 'sight' },
-  sanMiguel: { name: 'サン・ミゲル市場', en: 'Mercado de San Miguel', lat: 40.4154, lng: -3.7090, kind: 'food' },
-  sol: { name: 'プエルタ・デル・ソル', en: 'Puerta del Sol', lat: 40.4169, lng: -3.7035, kind: 'sight' },
-  prado: { name: 'プラド美術館', en: 'Museo del Prado', lat: 40.4138, lng: -3.6921, kind: 'sight' },
-  debod: { name: 'デボー神殿（夕日スポット）', en: 'Templo de Debod', lat: 40.4240, lng: -3.7178, kind: 'sight' },
-  sanGines: { name: 'チョコラテリア・サン・ヒネス（チュロス）', en: 'Chocolatería San Ginés', lat: 40.4168, lng: -3.7068, kind: 'food' },
-  botin: { name: 'ソブリーノ・デ・ボティン（世界最古のレストラン）', en: 'Sobrino de Botín', lat: 40.4140, lng: -3.7083, kind: 'food' },
-
-  // グラナダ
-  alhambra: { name: 'アルハンブラ宮殿 入場口', en: 'Alhambra – Pabellón de Acceso', lat: 37.1760, lng: -3.5847, kind: 'sight' },
-  nazaries: { name: 'ナスル朝宮殿', en: 'Palacios Nazaríes', lat: 37.1770, lng: -3.5890, kind: 'sight' },
-  generalife: { name: 'ヘネラリフェ', en: 'Generalife', lat: 37.1770, lng: -3.5830, kind: 'sight' },
-  granadaCat: { name: 'グラナダ大聖堂・王室礼拝堂', en: 'Catedral / Capilla Real', lat: 37.1763, lng: -3.5995, kind: 'sight' },
-  alcaiceria: { name: 'アルカイセリア（土産物街）', en: 'Alcaicería', lat: 37.1756, lng: -3.5985, kind: 'shop' },
-  sanNicolas: { name: 'サン・ニコラス展望台', en: 'Mirador de San Nicolás', lat: 37.1811, lng: -3.5926, kind: 'sight' },
-  sacromonte: { name: 'サクロモンテ（洞窟フラメンコ）', en: 'Sacromonte', lat: 37.1817, lng: -3.5850, kind: 'sight' },
-  castaneda: { name: 'ボデガス・カスタニェダ（タパス）', en: 'Bodegas Castañeda', lat: 37.1767, lng: -3.5987, kind: 'food' },
-  diamantes: { name: 'バル・ロス・ディアマンテス（魚介フライ）', en: 'Bar Los Diamantes', lat: 37.1740, lng: -3.5985, kind: 'food' },
-
-  // バルセロナ
-  plCatalunya: { name: 'カタルーニャ広場', en: 'Plaça de Catalunya', lat: 41.3870, lng: 2.1700, kind: 'sight' },
-  batllo: { name: 'カサ・バトリョ', en: 'Casa Batlló', lat: 41.3916, lng: 2.1649, kind: 'sight' },
-  sagrada: { name: 'サグラダ・ファミリア', en: 'Basílica de la Sagrada Família', lat: 41.4036, lng: 2.1744, kind: 'sight' },
-  mila: { name: 'カサ・ミラ', en: 'Casa Milà (La Pedrera)', lat: 41.3954, lng: 2.1619, kind: 'sight' },
-  boqueria: { name: 'ボケリア市場', en: 'Mercat de la Boqueria', lat: 41.3817, lng: 2.1716, kind: 'food' },
-  gotic: { name: 'ゴシック地区・大聖堂', en: 'Barri Gòtic / Catedral', lat: 41.3840, lng: 2.1762, kind: 'sight' },
-  barceloneta: { name: 'バルセロネータ（海辺）', en: 'Barceloneta', lat: 41.3784, lng: 2.1925, kind: 'sight' },
-  catalana: { name: 'セルベセリア・カタラナ（タパス）', en: 'Cervecería Catalana', lat: 41.3925, lng: 2.1615, kind: 'food' },
-  xampanyet: { name: 'エル・シャンパニェット（バル）', en: 'El Xampanyet', lat: 41.3845, lng: 2.1813, kind: 'food' },
-  amatller: { name: 'チョコレート・アマトリェール', en: 'Chocolate Amatller', lat: 41.3914, lng: 2.1652, kind: 'shop' },
+ nrt:{name:'成田空港',en:'Narita International Airport',lat:35.772,lng:140.393,kind:'airport'},
+ hkg:{name:'香港国際空港',en:'Hong Kong International Airport',lat:22.308,lng:113.918,kind:'airport'},
+ han:{name:'ノイバイ国際空港',en:'Noi Bai International Airport',lat:21.219,lng:105.804,kind:'airport'},
+ hHanoi:{name:'トラン・トラン セントラル ホテル',en:'TrangTrang Central Hotel',lat:21.035,lng:105.853,kind:'hotel',addr:'6B Luong Ngoc Quyen Street, Hanoi',query:'TrangTrang Central Hotel 6B Luong Ngoc Quyen Hanoi'},
+ cruise:{name:'Celina of The Sea Cruise 集合先',en:'Celina of The Sea Cruise',lat:20.921,lng:106.986,kind:'hotel',addr:'Lot 41A, Tuan Chau Marina, Ha Long',query:'Celina of The Sea Cruise Lot 41A Tuan Chau Marina',mapNote:'港周辺の目安です。正確な受付地点を運航会社に確認してください。'},
+ oldQuarter:{name:'ハノイ旧市街',en:'Hanoi Old Quarter',lat:21.035,lng:105.85,kind:'sight'},
+ hoanKiem:{name:'ホアンキエム湖',en:'Hoan Kiem Lake',lat:21.0287,lng:105.852,kind:'sight'},
+ trainStreet:{name:'トレインストリート（観光案）',en:'Hanoi Train Street',lat:21.0304,lng:105.8452,kind:'sight'},
+ temple:{name:'文廟',en:'Temple of Literature Hanoi',lat:21.0281,lng:105.8355,kind:'sight'},
+ dongXuan:{name:'ドンスアン市場',en:'Dong Xuan Market',lat:21.038,lng:105.85,kind:'shop'}
 };
-
-// 移動（チケット風カード）
-window.MOVES = {
-  ey801: { type: 'flight', code: 'EY801', carrier: 'エティハド航空', from: { code: 'NRT', city: '東京 成田', term: 'T1' }, to: { code: 'AUH', city: 'アブダビ', term: 'A' }, dep: '18:00', arr: '00:20', arrNote: '+1', dur: '約11時間20分', note: 'スルーバゲージ（荷物はマドリードまで）' },
-  ey101: { type: 'flight', code: 'EY101', carrier: 'エティハド航空', from: { code: 'AUH', city: 'アブダビ', term: 'A' }, to: { code: 'MAD', city: 'マドリード', term: 'T4' }, dep: '02:25', arr: '08:10', dur: '約7時間45分', note: '乗継時間 2時間5分' },
-  toledoGo: { type: 'train', code: 'Renfe', carrier: '鉄道（直通）', from: { code: 'MAD', city: 'アトーチャ駅' }, to: { code: 'TOL', city: 'トレド駅' }, dep: '11:15', arr: '11:49', dur: '34分', note: '予約済み・乗換なし' },
-  toledoBack: { type: 'train', code: 'Renfe', carrier: '鉄道（直通）', from: { code: 'TOL', city: 'トレド駅' }, to: { code: 'MAD', city: 'アトーチャ駅' }, dep: '17:23', arr: '17:57', dur: '34分', note: '予約済み・乗換なし' },
-  ave: { type: 'train', code: 'AVE', carrier: 'Renfe 高速鉄道', from: { code: 'MAD', city: 'アトーチャ駅' }, to: { code: 'GRX', city: 'グラナダ駅' }, dep: '16:40', arr: '20:21', dur: '3時間41分', note: '予約確定・乗換なし。列車番号は確認書PDF' },
-  vy2011: { type: 'flight', code: 'VY2011', carrier: 'ブエリング航空', from: { code: 'GRX', city: 'グラナダ' }, to: { code: 'BCN', city: 'バルセロナ', term: 'T1' }, dep: '09:15', arr: '10:45', dur: '1時間30分', note: '受託手荷物は無料枠なし。購入状況を要確認' },
-  ey112: { type: 'flight', code: 'EY112', carrier: 'エティハド航空', from: { code: 'BCN', city: 'バルセロナ', term: 'T1' }, to: { code: 'AUH', city: 'アブダビ', term: 'A' }, dep: '10:45', arr: '19:20', dur: '約6時間35分', note: 'スルーバゲージ（荷物は成田まで）' },
-  ey800: { type: 'flight', code: 'EY800', carrier: 'エティハド航空', from: { code: 'AUH', city: 'アブダビ', term: 'A' }, to: { code: 'NRT', city: '東京 成田', term: 'T1' }, dep: '21:25', arr: '12:45', arrNote: '+1', dur: '約10時間20分', note: '乗継時間 2時間5分' },
+const flight=(code,from,to,dep,arr,dur,note,arrNote='')=>({type:'flight',code,carrier:'香港エクスプレス',from,to,dep,arr,dur,note,arrNote});
+const NRT={code:'NRT',city:'東京 成田'},HKG={code:'HKG',city:'香港'},HAN={code:'HAN',city:'ハノイ'};
+window.MOVES={
+ uo653:flight('UO653',NRT,HKG,'21:35','01:30','4時間55分','10/14出発 → 10/15到着。時刻は旅程PDFより','+1'),
+ uo540:flight('UO540',HKG,HAN,'07:40','08:50','2時間10分','10/15。香港で6時間10分の乗継。荷物の扱いは要確認'),
+ uo541:flight('UO541',HAN,HKG,'09:35','12:40','2時間5分','10/19。早朝の空港送迎を事前手配'),
+ uo652:flight('UO652',HKG,NRT,'15:10','20:40','4時間30分','10/19。香港で2時間30分の乗継。荷物の扱いは要確認')
 };
-
-// 日程
-// item: { time, title, note, move, place, tag }  tag: 'booked' | 'plan' | 'tip'
-window.DAYS = [
-  {
-    n: 1, date: '2026-10-14', dow: '水', city: '東京 → 機内', cityEn: 'Tokyo', theme: 'olive',
-    headline: '旅のはじまり',
-    lead: '成田からエティハド航空でアブダビへ。機内で1泊します。',
-    items: [
-      { time: '15:00', title: '成田空港 第1ターミナル到着（目安）', note: '国際線は出発の3時間前に着くのがおすすめ。チェックインの列は時期によって長くなります。', place: 'nrt' },
-      { time: '18:00', move: 'ey801' },
-      { time: '機内', title: '前半で4〜5時間寝る', note: '最初の機内食のあと（日本時間20時頃）から深夜1時頃まで寝ておきます。寝不足のまま観光日に入らないのが最優先。到着前の数時間は起きて、時計をスペイン時間（−7時間）に合わせます。', tag: 'sleep', jet: true },
-    ],
-    places: ['nrt', 'auh'],
-    routes: [['nrt', 'auh', 'flight']],
-    nearby: null,
-  },
-  {
-    n: 2, date: '2026-10-15', dow: '木', city: 'マドリード ／ トレド', cityEn: 'Madrid · Toledo', theme: 'terra',
-    headline: '古都トレドへ日帰り',
-    lead: '早朝にマドリード到着。その足で「街全体が世界遺産」のトレドへ。',
-    items: [
-      { time: '00:20', title: 'アブダビ到着・乗継', note: '「Transfer」の案内に従って保安検査を受け、出発ゲートへ。乗継は2時間5分あります。寝ずに歩いて過ごし、カフェインは控えめに。', place: 'auh' },
-      { time: '02:25', move: 'ey101' },
-      { time: '機内', title: 'ここでもできるだけ寝る', note: 'スペインの深夜0:25〜8:10。日本時間では朝〜昼なので眠りにくいこともありますが、目を閉じて休むだけでも違います。食事を断って寝始めるのもあり。アイマスク・耳栓・ネックピローがあると楽です。', tag: 'sleep', jet: true },
-      { time: '08:10', title: 'マドリード T4 到着', note: '入国審査はEUの新しい出入国システム（EES）で顔写真・指紋の登録があり、混むと時間がかかります。そのあと荷物を受け取ります。', place: 'mad' },
-      { time: '終日', title: '22時頃まで起きている', note: '午前中に日光を浴びるのが一番効きます。眠いときはトレド行きの電車で20分だけ。コーヒーは15時頃まで。', tag: 'sleep', jet: true },
-      { time: '09:30頃', title: '空港 → アトーチャ駅', note: 'T4の地下から近郊線セルカニアス C1 でアトーチャ駅まで直通（約25分）。大きな荷物は駅のコインロッカー、またはタクシー（定額€33）でホテルに預けてから向かうことも可能。', place: 'atocha', tag: 'tip' },
-      { time: '11:15', move: 'toledoGo', tag: 'booked' },
-      { time: '12:00', title: 'トレド旧市街へ', note: '駅から旧市街は上り坂で徒歩20〜25分。バス（L5・L61・L62）かタクシーで5〜10分のソコドベール広場へ。', place: 'zocodover' },
-      { time: '12:30', title: 'トレド大聖堂・アルカサル', note: 'スペイン・カトリックの総本山。宝物館と聖歌隊席は必見。', place: 'toledoCat' },
-      { time: '14:00', title: 'ランチ', note: '名物は鹿肉や山うずらの煮込み、カルカムーサス（豚肉とトマトの煮込み）。' },
-      { time: '15:00', title: 'サント・トメ教会・サン・フアン・デ・ロス・レイエス修道院', note: 'エル・グレコの名作「オルガス伯爵の埋葬」。修道院は回廊が美しい。', place: 'santoTome' },
-      { time: '16:15', title: 'トレド展望台（ミラドール）', note: '旧市街を一望できる絶景ポイント。タクシーで往復、または観光ミニトレインで。', place: 'mirador', tag: 'plan' },
-      { time: '17:23', move: 'toledoBack', tag: 'booked' },
-      { time: '18:30頃', title: 'ホテル チェックイン', note: 'リウ プラザ エスパーニャ。屋上の「360°ルーフトップバー」は夜景が見事（ガラスの空中通路あり）。', place: 'hMadrid' },
-      { time: '夜', title: '夕食はマヨール広場周辺へ', note: 'スペインの夕食は21時頃から。早めならバルでタパスを。', place: 'plazaMayor' },
-    ],
-    places: ['mad', 'atocha', 'toledoSt', 'zocodover', 'toledoCat', 'alcazar', 'santoTome', 'sanJuan', 'mirador', 'hMadrid'],
-    routes: [['mad', 'atocha', 'train'], ['atocha', 'toledoSt', 'train'], ['toledoSt', 'zocodover', 'car'], ['zocodover', 'toledoCat', 'walk'], ['toledoCat', 'santoTome', 'walk'], ['santoTome', 'sanJuan', 'walk'], ['toledoSt', 'atocha', 'train'], ['atocha', 'hMadrid', 'car']],
-    nearby: { center: 'hMadrid', label: 'ホテル（グラン・ビア）周辺', picks: ['debod', 'palacioReal', 'sanGines', 'plazaMayor'] },
-  },
-  {
-    n: 3, date: '2026-10-16', dow: '金', city: 'マドリード → グラナダ', cityEn: 'Madrid → Granada', theme: 'terra',
-    headline: '首都散策、そしてAVEで南へ',
-    lead: '午前はマドリード中心部を歩き、夕方に高速鉄道AVEでアンダルシアへ。',
-    items: [
-      { time: '朝', title: 'ホテルで朝食', note: '3名分の朝食つき。', place: 'hMadrid' },
-      { time: '09:30', title: '王宮', note: 'ホテルから徒歩約10分。ヨーロッパ屈指の豪華な宮殿。', place: 'palacioReal', tag: 'plan' },
-      { time: '11:00', title: 'マヨール広場・サン・ミゲル市場', note: '市場では生ハム、オリーブ、クロケタなどの食べ歩きができます。', place: 'sanMiguel', tag: 'plan' },
-      { time: '12:00', title: 'ホテル チェックアウト', note: '12:00まで。荷物はフロントに預けて観光を続けるのがおすすめ。', place: 'hMadrid' },
-      { time: '13:00', title: 'ランチ・プエルタ・デル・ソル周辺', note: 'チュロスならサン・ヒネス（1894年創業）。', place: 'sanGines', tag: 'plan' },
-      { time: '14:30', title: 'プラド美術館（時間があれば）', note: 'アトーチャ駅から徒歩10分。ベラスケスやゴヤの名作。オンラインで事前購入がおすすめ。', place: 'prado', tag: 'plan' },
-      { time: '16:00', title: 'アトーチャ駅へ', note: 'AVEは発車前に荷物のX線検査があります。20〜30分前には駅へ。', place: 'atocha', tag: 'tip' },
-      { time: '16:40', move: 'ave', tag: 'booked' },
-      { time: '20:21', title: 'グラナダ駅到着 → ホテルへ', note: 'ホテルはアルハンブラの丘の上。タクシーで約15分（目安€12〜15）。', place: 'granadaSt' },
-      { time: '21:00頃', title: 'ホテル アリクサレス チェックイン', note: '2泊。アルハンブラ宮殿の入場口まで徒歩数分の好立地。', place: 'hGranada' },
-    ],
-    places: ['hMadrid', 'palacioReal', 'plazaMayor', 'sanMiguel', 'sol', 'sanGines', 'prado', 'atocha', 'granadaSt', 'hGranada'],
-    routes: [['hMadrid', 'palacioReal', 'walk'], ['palacioReal', 'sanMiguel', 'walk'], ['sanMiguel', 'sol', 'walk'], ['sol', 'prado', 'walk'], ['prado', 'atocha', 'walk'], ['atocha', 'granadaSt', 'train'], ['granadaSt', 'hGranada', 'car']],
-    nearby: { center: 'hMadrid', label: 'マドリード中心部', picks: ['sanMiguel', 'botin', 'sanGines', 'prado'] },
-  },
-  {
-    n: 4, date: '2026-10-17', dow: '土', city: 'グラナダ', cityEn: 'Granada', theme: 'cobalt',
-    headline: 'アルハンブラの朝',
-    lead: 'イスラム建築の最高傑作アルハンブラ宮殿へ。夕方はアルバイシンから宮殿を望む夕日を。',
-    items: [
-      { time: '07:30', title: 'ホテルで朝食', place: 'hGranada' },
-      { time: '08:00', title: '入場口へ（徒歩数分）', note: '⚠️ チケットは記名式。パスポート原本が必要です。音声ガイドの受け取り方はGetYourGuideの案内を確認。', place: 'alhambra', tag: 'tip' },
-      { time: '08:30', title: 'アルハンブラ宮殿 入場（音声ガイドつき）', note: 'ナスル朝宮殿は指定時刻にしか入れないので、時刻をチケットで確認。アルカサバ、ヘネラリフェもあわせて3〜4時間。', place: 'nazaries', tag: 'booked' },
-      { time: '12:30', title: '丘を下って市街地へ', note: 'ミニバス（C30・C32）か、ゴメレス坂を徒歩で下りて約20分。', tag: 'tip' },
-      { time: '13:00', title: 'タパスでランチ', note: 'グラナダはドリンクを頼むとタパスが無料でつく文化。ボデガス・カスタニェダが老舗。', place: 'castaneda', tag: 'plan' },
-      { time: '14:30', title: '大聖堂・王室礼拝堂・アルカイセリア', note: 'カトリック両王の墓所。アルカイセリアは旧絹市場の土産物街。', place: 'granadaCat', tag: 'plan' },
-      { time: '17:00', title: 'アルバイシン散策', note: '白壁の迷路のような旧アラブ人街（世界遺産）。スリに注意。', tag: 'plan' },
-      { time: '19:00', title: 'サン・ニコラス展望台で夕日', note: '夕日に染まるアルハンブラは旅のハイライト。日の入りは19時半頃。', place: 'sanNicolas', tag: 'plan' },
-      { time: '21:00', title: 'フラメンコ（予定）', note: 'サクロモンテの洞窟フラメンコはグラナダ名物。バルセロナで観る場合は10/19の夜に。', place: 'sacromonte', tag: 'plan' },
-    ],
-    places: ['hGranada', 'alhambra', 'nazaries', 'generalife', 'castaneda', 'granadaCat', 'alcaiceria', 'sanNicolas', 'sacromonte', 'diamantes'],
-    routes: [['hGranada', 'alhambra', 'walk'], ['alhambra', 'generalife', 'walk'], ['generalife', 'nazaries', 'walk'], ['nazaries', 'castaneda', 'walk'], ['castaneda', 'granadaCat', 'walk'], ['granadaCat', 'sanNicolas', 'walk'], ['sanNicolas', 'sacromonte', 'walk']],
-    nearby: { center: 'hGranada', label: 'グラナダ中心部', picks: ['castaneda', 'diamantes', 'alcaiceria', 'sanNicolas'] },
-  },
-  {
-    n: 5, date: '2026-10-18', dow: '日', city: 'グラナダ → バルセロナ', cityEn: 'Granada → Barcelona', theme: 'cobalt',
-    headline: '地中海の街へ',
-    lead: '朝の便でバルセロナへ。午後は旧市街と海辺をのんびり歩きます。',
-    items: [
-      { time: '07:00', title: 'ホテルで朝食・チェックアウト', note: '朝食つき。早めの時間に食べられるか前日にフロントで確認を。', place: 'hGranada' },
-      { time: '07:30', title: 'タクシーで空港へ', note: '約25分。前日のうちにホテルのフロントでタクシーを予約しておくと安心です。', place: 'grx', tag: 'tip' },
-      { time: '09:15', move: 'vy2011', tag: 'booked' },
-      { time: '10:45', title: 'バルセロナ T1 到着 → ホテルへ', note: 'アエロブス（空港バス）でカタルーニャ広場へ約35分、そこから地下鉄。タクシーなら約30分（€35〜40）。', place: 'bcn' },
-      { time: '12:00', title: 'ホテルに荷物を預ける', note: 'チェックインは15:00から。', place: 'hBarcelona' },
-      { time: '13:00', title: 'ボケリア市場・ランブラス通り', note: '生ハム、フルーツジュース、シーフードのバル。ランブラスはスリが多いので特に注意。', place: 'boqueria', tag: 'plan' },
-      { time: '15:00', title: 'ゴシック地区・大聖堂', note: '中世の路地が残るエリア。日曜日は閉まっている店も多いです。', place: 'gotic', tag: 'plan' },
-      { time: '17:00', title: 'バルセロネータで海辺散歩', note: '夕食はパエリアのお店で。', place: 'barceloneta', tag: 'plan' },
-      { time: '19:00頃', title: 'ホテル チェックイン', note: 'ユーロスターズ モニュメンタル（2泊）。都市税（約€55）は現地で支払い。', place: 'hBarcelona' },
-    ],
-    places: ['hGranada', 'grx', 'bcn', 'plCatalunya', 'hBarcelona', 'boqueria', 'gotic', 'xampanyet', 'barceloneta'],
-    routes: [['hGranada', 'grx', 'car'], ['grx', 'bcn', 'flight'], ['bcn', 'plCatalunya', 'car'], ['plCatalunya', 'hBarcelona', 'train'], ['plCatalunya', 'boqueria', 'walk'], ['boqueria', 'gotic', 'walk'], ['gotic', 'barceloneta', 'walk']],
-    nearby: { center: 'hBarcelona', label: 'ホテル（モニュメンタル）周辺', picks: ['sagrada', 'xampanyet', 'boqueria', 'barceloneta'] },
-  },
-  {
-    n: 6, date: '2026-10-19', dow: '月', city: 'バルセロナ', cityEn: 'Barcelona', theme: 'saffron',
-    headline: 'ガウディをめぐる一日',
-    lead: 'ガウディ没後100年の2026年。代表作3つを1日でめぐります（すべて予約済み）。',
-    items: [
-      { time: '08:00', title: 'ホテルで朝食', place: 'hBarcelona' },
-      { time: '08:40', title: 'カサ・バトリョへ', note: '地下鉄L2 Monumental → Passeig de Gràcia（約15分）。', tag: 'tip' },
-      { time: '09:15', title: 'カサ・バトリョ（ブルーチケット）', note: '海をテーマにした「骨の家」。所要時間は約1時間〜1時間半。', place: 'batllo', tag: 'booked' },
-      { time: '10:40', title: 'サグラダ・ファミリアへ移動', note: '地下鉄L5 Diagonal → Sagrada Família（約10分）。15分前には到着を。', tag: 'tip' },
-      { time: '11:15', title: 'サグラダ・ファミリア（塔登り＋音声ガイド）', note: '塔はランダム割当。登る時刻はチケットの表示を確認。大きな荷物は持ち込み不可。', place: 'sagrada', tag: 'booked' },
-      { time: '13:30', title: 'ランチ', note: 'カサ・ミラ近くのセルベセリア・カタラナは人気のタパス店（並ぶ覚悟で）。', place: 'catalana', tag: 'plan' },
-      { time: '14:30', title: 'カサ・ミラ（スタンダードツアー）', note: '波打つ屋上の煙突群が見どころ。所要時間は約1時間半。', place: 'mila', tag: 'booked' },
-      { time: '16:30', title: 'グラシア通りでショッピング', note: 'カサ・バトリョの隣にチョコレート・アマトリェール。', place: 'amatller', tag: 'plan' },
-      { time: '夜', title: 'フラメンコ or 最後のディナー', note: 'グラナダで観なかった場合はランブラス周辺のタブラオで。', tag: 'plan' },
-    ],
-    places: ['hBarcelona', 'batllo', 'amatller', 'sagrada', 'catalana', 'mila'],
-    routes: [['hBarcelona', 'batllo', 'train'], ['batllo', 'sagrada', 'train'], ['sagrada', 'catalana', 'train'], ['catalana', 'mila', 'walk'], ['mila', 'amatller', 'walk']],
-    nearby: { center: 'hBarcelona', label: 'グラシア通り周辺', picks: ['catalana', 'amatller', 'mila', 'batllo'] },
-  },
-  {
-    n: 7, date: '2026-10-20', dow: '火', city: 'バルセロナ → 機内', cityEn: 'Barcelona → Abu Dhabi', theme: 'olive',
-    headline: 'アディオス、エスパーニャ',
-    lead: 'バルセロナからアブダビ経由で帰国します。免税手続きを忘れずに。',
-    items: [
-      { time: '07:00', title: '朝食・チェックアウト', place: 'hBarcelona' },
-      { time: '07:45', title: '空港へ', note: 'タクシーで約30分。アエロブスならカタルーニャ広場から約35分。', tag: 'tip' },
-      { time: '08:30', title: 'T1 到着・免税手続き・チェックイン', note: '免税（タックスフリー）の書類がある場合は、チェックイン前にDIVA端末で認証を。詳しくは空港ページ。', place: 'bcn', tag: 'tip' },
-      { time: '10:45', move: 'ey112' },
-      { time: '機内', title: 'なるべく起きておく', note: '日本時間では夕方〜深夜0時頃（17:45〜00:20）。短い仮眠ならOK。時計は日本時間（+7時間）に合わせます。', tag: 'sleep', jet: true },
-      { time: '19:20', title: 'アブダビ到着・乗継', note: '軽く食べて、次の便で寝る準備を。', place: 'auh' },
-      { time: '21:25', move: 'ey800' },
-      { time: '機内', title: '離陸したらすぐ寝る', note: '日本の深夜2:25〜。ここでどれだけ寝られるかが帰国後の時差ボケを左右します。成田着の2〜3時間前に起きる。', tag: 'sleep', jet: true },
-    ],
-    places: ['hBarcelona', 'bcn', 'auh', 'nrt'],
-    routes: [['hBarcelona', 'bcn', 'car'], ['bcn', 'auh', 'flight'], ['auh', 'nrt', 'flight']],
-    nearby: null,
-  },
-  {
-    n: 8, date: '2026-10-21', dow: '水', city: '東京', cityEn: 'Tokyo', theme: 'olive',
-    headline: 'ただいま',
-    lead: '12:45 成田着。おつかれさまでした！',
-    items: [
-      { time: '12:45', title: '成田空港 第1ターミナル到着', note: '入国前の動物検疫に注意。生ハムなどの肉製品は持ち込めません。', place: 'nrt' },
-      { time: '午後〜', title: '22〜23時まで起きている', note: '日光を浴びて体内時計を日本に戻します。昼寝は15時までに30分以内。翌日の予定は軽めに。', tag: 'sleep', jet: true },
-    ],
-    places: ['nrt'],
-    routes: [],
-    nearby: null,
-  },
+const item=(time,title,note,place,tag)=>({time,title,note,place,tag});
+const nearby={center:'hHanoi',label:'ホテル・旧市街周辺',picks:['oldQuarter','hoanKiem','dongXuan']};
+window.DAYS=[
+ {n:1,date:'2026-10-14',dow:'水',city:'成田 → 香港',cityEn:'Narita → Hong Kong',theme:'olive',headline:'夜のフライトで旅のはじまり',lead:'香港経由でハノイへ。香港到着は翌日01:30です。',items:[
+ item('出発前','成田でチェックイン','ターミナル・カウンター・受付締切を航空会社で確認。香港での乗継方法、次便の搭乗券、荷物の最終受取地も確認。','nrt','tip'),{time:'21:35',move:'uo653'},
+ {...item('機内','到着前に休息','香港は日本より1時間、ハノイは2時間遅れ。夜間の移動と早朝の乗継に備え休みます。',null,'sleep'),jet:true}
+ ],places:['nrt','hkg'],routes:[['nrt','hkg','flight']],nearby:null},
+ {n:2,date:'2026-10-15',dow:'木',city:'香港 → ハノイ',cityEn:'Hong Kong → Hanoi',theme:'terra',headline:'旧市街とホアンキエム湖',lead:'08:50ハノイ着。体調に合わせて旧市街を散策する観光案です。',items:[
+ item('01:30','香港到着・乗継','次便07:40まで6時間10分。U-Connect利用有無と預け荷物の取扱いで手順が変わるため、事前に確認した案内に従います。','hkg'),{time:'07:40',move:'uo540'},
+ item('08:50','ハノイ到着','入国・荷物受取後、ホテルへ。送迎の予約状況は要確認。','han'),
+ item('午前','ホテルへ・荷物を預ける','10/15〜16の1泊。チェックイン時刻と到着前の荷物預かりはホテルに確認。','hHanoi','booked'),
+ item('午後','旧市街・ホアンキエム湖散策','PDFの観光案。夜間移動後なので、疲れ具合に合わせて調整。','hoanKiem','plan'),
+ item('夕方','翌日の送迎・集合場所を確認','10/16の11:00集合は確定。07:00ホテル出発・10:15港着は移動目安。送迎予約時に再確認。',null,'confirm')
+ ],places:['hkg','han','hHanoi','oldQuarter','hoanKiem'],routes:[['hkg','han','flight'],['han','hHanoi','car'],['hHanoi','hoanKiem','walk']],nearby},
+ {n:3,date:'2026-10-16',dow:'金',city:'ハノイ → ハロン湾',cityEn:'Hanoi → Ha Long Bay',theme:'cobalt',headline:'ハロン湾で1泊クルーズ',lead:'Celina of The Sea Cruise。11:00集合は確定、朝の出発・到着時刻は目安です。',items:[
+ item('07:00頃','ホテル出発（移動目安）','送迎予約時に出発時刻・迎えの場所を確認。チェックアウトと荷物の扱いも確認。','hHanoi','estimate'),
+ item('10:15頃','トゥアンチャウ港 到着目標','余裕を見た提案時刻。集合先はLot 41A。正確な受付地点は運航会社に確認。','cruise','estimate'),
+ item('11:00','クルーズ集合【確定】','Celina of The Sea Cruise／Lot 41A, Tuan Chau Marina, Ha Long。ご本人確認済みの集合時刻。','cruise','confirmed'),
+ item('乗船後','クルーズ・船内泊','10/16〜17の1泊。出港・食事・アクティビティは運航会社の確定行程に従います。',null,'booked')
+ ],places:['hHanoi','cruise'],routes:[['hHanoi','cruise','car']],nearby:null},
+ {n:4,date:'2026-10-17',dow:'土',city:'ハロン湾 → ハノイ',cityEn:'Ha Long Bay → Hanoi',theme:'cobalt',headline:'下船してハノイへ',lead:'下船時刻と帰路の移動方法は要確認。ハノイで再びホテルへ。',items:[
+ item('時刻未定','クルーズ下船','下船時刻・迎えの場所・帰路の送迎を運航会社に確認。','cruise','confirm'),
+ item('下船後','ハノイへ移動','所要時間や到着時刻は送迎確定後に更新。',null,'confirm'),
+ item('到着後','ホテル チェックイン','TrangTrang Central Hotel。10/17〜19の2泊は予約済み。','hHanoi','booked'),
+ item('夜','旧市街で夕食','PDFの観光案。帰着時間と疲れ具合に合わせて調整。','oldQuarter','plan')
+ ],places:['cruise','hHanoi','oldQuarter'],routes:[['cruise','hHanoi','car']],nearby},
+ {n:5,date:'2026-10-18',dow:'日',city:'ハノイ',cityEn:'Hanoi',theme:'terra',headline:'市内観光と買い物',lead:'トレインストリート、文廟、買い物などの観光案。順番と時間は未確定です。',items:[
+ item('時間未定','トレインストリート','PDFの候補。現地の立入規制と案内に従い、線路内には立ち入らないでください。','trainStreet','plan'),
+ item('時間未定','文廟','PDFの候補。開館状況・チケットは訪問前に確認。','temple','plan'),
+ item('時間未定','旧市街で買い物','買い物先や購入品は当日調整。お土産ガイドも参照。','oldQuarter','plan'),
+ item('夜','翌朝の空港送迎・荷造り','09:35発に間に合うホテル出発時刻を送迎業者に確認。早朝チェックアウトもフロントへ相談。','hHanoi','confirm')
+ ],places:['hHanoi','trainStreet','temple','oldQuarter'],routes:[],nearby},
+ {n:6,date:'2026-10-19',dow:'月',city:'ハノイ → 香港 → 成田',cityEn:'Hanoi → Hong Kong → Narita',theme:'olive',headline:'香港経由で帰国',lead:'09:35ハノイ発、20:40成田着。香港での乗継は2時間30分です。',items:[
+ item('早朝','ホテル出発 → ノイバイ空港','送迎を事前手配。出発時刻・受付締切・空港到着目標を予約時に確認。','hHanoi','confirm'),
+ {time:'09:35',move:'uo541'},item('12:40','香港到着・乗継','次便15:10まで2時間30分。荷物の受取・再預けが必要か事前確認。','hkg'),
+ {time:'15:10',move:'uo652'},item('20:40','成田到着','入国手続き・荷物受取・税関後に帰宅。','nrt')
+ ],places:['hHanoi','han','hkg','nrt'],routes:[['hHanoi','han','car'],['han','hkg','flight'],['hkg','nrt','flight']],nearby:null}
 ];
-
-// ホテル
-window.HOTELS = [
-  { place: 'hMadrid', city: 'マドリード', nights: '10/15 → 10/16（1泊）', in: '15:00以降', out: '12:00まで', room: 'スーペリアデラックスツイン（シングルベッド2台＋ソファーベッド）', meal: '10/16 朝食', note: 'キャンセル無料は10/13まで' },
-  { place: 'hGranada', city: 'グラナダ', nights: '10/16 → 10/18（2泊）', in: '14:00以降', out: '12:00まで', room: 'トリプル（シングルベッド3台）', meal: '10/17・10/18 朝食', note: 'キャンセル無料は10/13まで' },
-  { place: 'hBarcelona', city: 'バルセロナ', nights: '10/18 → 10/20（2泊）', in: '15:00以降', out: '12:00まで', room: 'ダブル／ツイン（エキストラベッド）', meal: '10/19・10/20 朝食', note: '都市税 約€55.44 を現地で支払い' },
+window.HOTELS=[
+ {place:'hHanoi',city:'ハノイ',nights:'10/15 → 10/16（1泊）',in:'要確認',out:'10/16 早朝出発予定・要確認',room:'確認書を参照',meal:'要確認',note:'予約済み。朝の送迎とチェックアウトを事前に相談。'},
+ {place:'cruise',city:'ハロン湾・船内泊',nights:'10/16 → 10/17（1泊）',in:'10/16 11:00集合【確定】',out:'10/17 下船時刻は要確認',room:'確認書を参照',meal:'運航会社の行程を確認',note:'受付はLot 41A。正確な地点・下船時刻・帰路の送迎を確認。'},
+ {place:'hHanoi',city:'ハノイ',nights:'10/17 → 10/19（2泊）',in:'要確認',out:'10/19 早朝出発予定・要確認',room:'確認書を参照',meal:'要確認',note:'予約済み。10/19の空港送迎を前日までに手配。'}
 ];
-
-// 空港ガイド
-window.AIRPORTS = [
-  {
-    id: 'nrt', code: 'NRT', name: '成田空港 第1ターミナル', when: '10/14 出発 ・ 10/21 帰国',
-    lead: 'エティハド航空は第1ターミナル。どちらのウィングかは当日の出発案内板で確認します。',
-    steps: [
-      { t: '出発3時間前', d: '第1ターミナル4階の出発ロビーへ。エティハドのカウンターでチェックインし、荷物を預けます（荷物はマドリードまで通しで運ばれます）。' },
-      { t: '保安検査', d: '液体は100ml以下の容器に入れ、1L以下の透明袋1つにまとめます。モバイルバッテリーは機内持ち込みのみ。' },
-      { t: '出国審査', d: '顔認証ゲートでパスポートをかざすだけ。' },
-      { t: '出国後', d: '免税店「Fa-So-La」や飲食店があります。日本円はここで最小限ユーロに両替するか、現地ATMを使う方が有利なことが多いです。' },
-    ],
-    arrive: [
-      { t: '帰国時', d: '検疫 → 入国審査（顔認証ゲート）→ 荷物受取 → 税関（Visit Japan Webの二次元コードを使うと早い）。' },
-    ],
-    tips: ['Visit Japan Web に帰国前に税関申告を登録しておくとスムーズ', '肉製品（生ハム・サラミ・ソーセージ）は免税店で買ったものでも持ち込めません'],
-  },
-  {
-    id: 'auh', code: 'AUH', name: 'アブダビ ザイード国際空港 ターミナルA', when: '10/15 乗継（2時間5分）・ 10/20 乗継（2時間5分）',
-    lead: '2023年に開業した巨大な新ターミナル。乗継はターミナル内で完結します。',
-    steps: [
-      { t: '到着', d: '飛行機を降りたら「Transfers（乗継）」の案内に従います。入国審査は不要。' },
-      { t: '乗継保安検査', d: 'もう一度保安検査があります。液体ルールに注意（免税店で買った液体は封をした袋のままに）。' },
-      { t: 'ゲート確認', d: '案内板で次の便（EY101 / EY800）のゲートを確認。ゲートまで歩いて10〜15分かかることもあります。' },
-      { t: '待ち時間', d: '中央のマーケットプレイス・エリアに免税店、カフェ、フードコート。深夜でも営業している店があります。' },
-    ],
-    arrive: [],
-    tips: ['預けた荷物は最終目的地まで通しで運ばれるので、受け取りは不要', 'お土産ならデーツ（ナツメヤシ）やアラビアンコーヒーが定番', 'ターミナル内は冷房が強めなので羽織るものを'],
-  },
-  {
-    id: 'mad', code: 'MAD', name: 'マドリード バラハス空港 T4', when: '10/15 到着',
-    lead: 'シェンゲン圏外からの便はT4S（サテライト）に着き、入国審査のあと無人電車でT4本館へ移動して荷物を受け取ります。',
-    steps: [
-      { t: '到着（T4S）', d: '案内に従って入国審査へ。EUの新システム（EES）により初回は顔写真・指紋の登録があります。混雑時は1時間程度かかることも。' },
-      { t: '無人電車でT4へ', d: '入国審査のあと、シャトル電車（約3分）でT4本館へ。' },
-      { t: '荷物受取・税関', d: '受け取ったら緑の「Nothing to declare（申告なし）」の出口から外へ。' },
-      { t: '市内へ', d: '下の「市内への行き方」を参照。' },
-    ],
-    arrive: [
-      { t: '近郊線 セルカニアス C1', d: 'T4の地下ホームからアトーチャ駅まで直通約25分（約€2.6）。トレドへ向かう日はこれが最適。' },
-      { t: '空港バス（Exprés Aeropuerto）', d: '24時間運行・€5。アトーチャ駅周辺まで約40分。' },
-      { t: 'タクシー', d: '市内中心部まで定額€33。ホテル（グラン・ビア）に荷物を預けるならこれが便利。' },
-    ],
-    tips: ['到着の日は大忙し。トレド行きは11:15発なので、入国が長引いたらタクシーで直接アトーチャ駅へ', 'アトーチャ駅には荷物預かり（コンシグナ）あり'],
-  },
-  {
-    id: 'grx', code: 'GRX', name: 'グラナダ空港（フェデリコ・ガルシア・ロルカ）', when: '10/18 出発',
-    lead: '小さな空港なので迷う心配はありません。市内から西へ約17km。',
-    steps: [
-      { t: '出発の1時間半前', d: 'ブエリング航空のカウンターへ。オンラインチェックインを前日に済ませておくとスムーズです。' },
-      { t: '手荷物', d: '⚠️ 国内線の区間は運賃に受託手荷物が含まれていません。購入済みか必ず確認を（空港で追加すると割高）。' },
-      { t: '保安検査', d: 'スペイン国内線なので出国審査はありません。' },
-    ],
-    arrive: [
-      { t: 'タクシー', d: 'ホテルから約25分。空港行きは定額運賃あり（€30前後）。早朝なので前日にホテルで予約を。' },
-    ],
-    tips: ['早朝はカフェが少ないので、ホテルで朝食をとるか軽食の持参を'],
-  },
-  {
-    id: 'bcn', code: 'BCN', name: 'バルセロナ エル・プラット空港 T1', when: '10/18 到着 ・ 10/20 出発',
-    lead: '到着も出発もT1。ガラス張りの明るく大きなターミナルです。',
-    steps: [
-      { t: '出発：チェックイン前に免税手続き', d: '免税書類がある人は、まずDIVA端末（電子認証機）でパスポートと書類をスキャン。預け荷物に入れる商品は、荷物を預ける前に見せられるように。' },
-      { t: 'チェックイン・荷物預け', d: 'エティハドのカウンターへ。荷物は成田まで通しで運ばれます。' },
-      { t: '保安検査 → 出国審査', d: 'EES（出国の記録）があるので時間に余裕を。出国審査のあとは非シェンゲンエリア。' },
-      { t: '出国後', d: '大きな免税店（Duty Free）でトゥロン、オリーブオイル、ワイン、お菓子などが買えます。' },
-    ],
-    arrive: [
-      { t: 'アエロブス（Aerobús）', d: 'T1から約5〜10分間隔。カタルーニャ広場まで約35分。そこから地下鉄L2（Universitat駅）でMonumental駅へ。' },
-      { t: 'タクシー', d: 'ホテルまで約30分・€35〜40。3人と荷物ならコスパ良し。' },
-    ],
-    tips: ['アブダビで乗り継ぐため、オリーブオイルやワインなどの液体は街で買ってスーツケースに入れるのが安全', '免税店の液体は封をした袋のまま開けずに'],
-  },
+const hk='https://www.hkexpress.com/';
+window.AIRPORTS=[
+ {id:'nrt',code:'NRT',name:'成田空港',when:'10/14 21:35出発 ・ 10/19 20:40帰国',lead:'香港エクスプレス UO653で香港へ。使用ターミナルとカウンターは最新案内を確認。',steps:[{t:'チェックイン',d:'パスポートと確認書を用意。香港での乗継方法、次便の搭乗券、荷物の最終受取地を確認。'},{t:'保安検査・出国',d:'航空会社の手荷物条件と空港の案内に従って搭乗ゲートへ。'}],arrive:[{t:'帰国時',d:'入国手続き → 荷物受取 → 税関。'}],tips:['手荷物枠は購入運賃で異なります。予約内容を確認。'],links:[{label:'成田空港公式',url:'https://www.narita-airport.jp/'},{label:'航空会社公式',url:hk}]},
+ {id:'hkg',code:'HKG',name:'香港国際空港',when:'10/15 01:30 → 07:40（6時間10分）・ 10/19 12:40 → 15:10（2時間30分）',lead:'U-Connect利用有無・搭乗券・荷物の扱いを事前に確認。',steps:[{t:'乗継方法を確認',d:'U-Connectの利用状況は旅程PDFに未記載。入国・荷物受取・再チェックインの要否を航空会社へ確認。'},{t:'次便の搭乗券',d:'乗継として案内された場合はTransferの標識に従い、搭乗券の有無に応じた手順へ。'},{t:'保安検査・ゲート確認',d:'乗継保安検査後、案内板でUO540／UO652のゲートと搭乗時刻を確認。'}],arrive:[],tips:['往路は深夜から早朝。羽織もの・充電器を手元に。','復路は2時間30分。再チェックインが必要なら受付締切を事前確認。'],links:[{label:'空港の乗継案内',url:'https://www.hongkongairport.com/en/passenger-guide/transfer-transit/'},{label:'U-Connect公式',url:'https://www2.hkexpress.com/en/plan-your-trip/u-connect-connecting-flights'}]},
+ {id:'han',code:'HAN',name:'ノイバイ国際空港',when:'10/15 08:50到着 ・ 10/19 09:35出発',lead:'ハノイの空港。帰国日は早朝にホテルを出発。',steps:[{t:'到着',d:'入国手続き → 荷物受取 → 税関。迎えの場所を送迎業者と確認。'},{t:'帰国日の出発',d:'チェックイン → 保安検査・出国手続き → 搭乗ゲート。受付締切は航空会社で確認。'}],arrive:[{t:'ホテルへ',d:'ホテルまたは送迎業者へ車を手配。6B Luong Ngoc Quyen Streetを伝えます。予約状況は要確認。'}],tips:['10/19の空港送迎を前日までに手配。','料金・集合場所・出発時刻を予約時に確認。'],links:[{label:'空港公式',url:'https://noibaiairport.vn/'}]}
 ];
-
-// お土産
-window.SOUVENIRS = [
-  {
-    city: 'トレド', en: 'Toledo', theme: 'terra',
-    items: [
-      { name: 'マサパン（マジパン）', desc: 'アーモンドと砂糖で作るトレド名物。1856年創業「サント・トメ」が有名。', price: '€8〜25', shop: 'Mazapanes Santo Tomé' },
-      { name: 'ダマスキナード（金銀象嵌）', desc: '黒い鉄に金の糸で模様を描いた伝統工芸。アクセサリーや小皿。', price: '€10〜60' },
-      { name: 'トレドの剣（ミニチュア）', desc: '刀剣の街トレドならでは。ペーパーナイフなど小物が手頃。', price: '€10〜40' },
-    ],
-  },
-  {
-    city: 'マドリード', en: 'Madrid', theme: 'terra',
-    items: [
-      { name: 'トゥロン（ヌガー）', desc: 'スペインの定番菓子。硬い「アリカンテ」と柔らかい「ヒホナ」の2種類。老舗のカサ・ミラ（1842年創業）が有名。', price: '€6〜20', shop: 'Casa Mira Madrid' },
-      { name: 'スモークパプリカ（ピメントン）', desc: 'おしゃれな缶入り。料理好きへのお土産に。', price: '€3〜8' },
-      { name: 'グルメ食材', desc: 'エル・コルテ・イングレスのカリャオ店のグルメ売り場なら、まとめて買えて便利。', price: '—', shop: 'El Corte Inglés Callao' },
-    ],
-  },
-  {
-    city: 'グラナダ', en: 'Granada', theme: 'cobalt',
-    items: [
-      { name: 'タラセア（寄木細工）', desc: 'イスラム由来の幾何学模様の寄木細工。小箱やコースター。', price: '€15〜80' },
-      { name: 'ファハラウサ焼', desc: '白地に青と緑で絵付けしたグラナダの陶器。', price: '€10〜50' },
-      { name: 'ピオノノ', desc: 'シロップを染みこませた小さなケーキ。日持ちしないので現地で。', price: '€1.5〜/個', shop: 'Casa Ysla Granada' },
-      { name: 'アルハンブラ模様の雑貨', desc: 'タイル柄のマグネットやコースター。アルカイセリアに店が集まっています。', price: '€3〜15' },
-    ],
-  },
-  {
-    city: 'バルセロナ', en: 'Barcelona', theme: 'saffron',
-    items: [
-      { name: 'ガウディグッズ', desc: 'トレンカディス（モザイク）柄のトカゲ、タイル、文具。各施設のミュージアムショップが充実。', price: '€5〜40' },
-      { name: 'チョコレート・アマトリェール', desc: '1797年創業のブランド。レトロなパッケージの板チョコはばらまき用に最適。', price: '€3〜10', shop: 'Chocolate Amatller Barcelona' },
-      { name: 'トゥロン・ビセンス', desc: 'フレーバー豊富な高級トゥロン。', price: '€8〜25', shop: 'Torrons Vicens Barcelona' },
-      { name: 'エスパドリーユ', desc: '1940年創業の老舗「ラ・マヌアル・アルパルガテラ」の手作り麻底靴。', price: '€20〜60', shop: 'La Manual Alpargatera' },
-    ],
-  },
-  {
-    city: 'スーパーで買える', en: 'Supermercado', theme: 'olive',
-    items: [
-      { name: 'オリーブオイル', desc: '小瓶や缶入りが便利。必ずスーツケースへ。', price: '€4〜15' },
-      { name: 'サフラン', desc: 'パエリアに欠かせない。日本よりずっと安い。', price: '€3〜10' },
-      { name: 'チュパチャプス／ラカシトス', desc: 'チュパチャプスはスペイン生まれ（ロゴはダリのデザイン）。', price: '€1〜5' },
-      { name: 'パエリアの素', desc: '粉末やペーストタイプ。帰国後に旅の味を再現。', price: '€1〜4' },
-      { name: 'メルカドナのコスメ', desc: '大手スーパー「メルカドナ」のプライベートブランドのコスメが安くて人気。', price: '€2〜10' },
-    ],
-  },
-];
-
-window.SOUVENIR_NOTES = [
-  '🚫 生ハム・チョリソー・サラミなどの肉製品は、日本の動物検疫で持ち込みできません（真空パックや免税品でも不可）。',
-  '🧴 液体（オイル・ワイン・ジャム）は、アブダビの乗継で没収されないようにスーツケースへ。',
-  '🧾 スペインは免税（タックスフリー）に最低購入金額がありません。対象のお店で「Tax free」と伝えて書類を作ってもらい、帰国時にバルセロナ空港のDIVA端末で手続きします。',
-];
-
-// 情報
-window.INFO = {
-  baggage: [
-    'エティハド（国際線）：機内持ち込み1個／人（7kg・56×36×23cm以内）、受託手荷物25kg／人（90×72×45cm以内）',
-    'ブエリング（グラナダ→バルセロナ）：無料の受託手荷物なし。購入状況を要確認',
-  ],
-  emergency: [
-    { k: '緊急通報（警察・救急・消防）', v: '112' },
-    { k: '在スペイン日本国大使館（マドリード）', v: '+34-91-590-7600' },
-    { k: '在バルセロナ日本国総領事館', v: '+34-93-280-3433' },
-  ],
-  tips: [
-    { k: '時差', v: '日本より7時間遅い（日本 20:00 ＝ スペイン 13:00）。10/25 にサマータイムが終わりますが、旅行中は影響なし。' },
-    { k: '天気（10月中旬）', v: 'マドリード 12〜22℃、グラナダ 10〜23℃（朝晩は冷える）、バルセロナ 15〜22℃。重ね着がおすすめ。' },
-    { k: '電源', v: 'Cタイプ、230V。スマホやPCの充電器はそのまま使えます（変換プラグが必要）。' },
-    { k: 'お金', v: 'ほぼどこでもカード払い（タッチ決済）が使えます。小銭は市場やチップ用に少し。' },
-    { k: 'チップ', v: '義務ではありません。レストランでよかったら端数を切り上げるか5〜10%程度。' },
-    { k: '食事の時間', v: 'ランチは14時頃、ディナーは21時頃からと遅め。バルなら一日中つまめます。' },
-    { k: '治安', v: '観光地や地下鉄はスリが多発。バッグは体の前に、スマホをテーブルに置かない。' },
-    { k: '入国', v: 'パスポートの残存期間は3か月以上。欧州渡航認証ETIASは開始時期を出発前に要確認。' },
-  ],
-  jetlag: {
-    lead: '行きは寝不足のまま観光日に入らないことが最優先。EY801の前半とEY101に分けて、合計8時間ほど眠れるのが理想です。帰りは「1本目は起きる・2本目で寝る」。',
-    legs: [
-      { h: '行き 10/14〜15', rows: [
-        { k: 'EY801 成田→アブダビ', es: '11:00→22:20', jp: '18:00→05:20', act: '前半4〜5時間寝て、後半は起きる', sleep: true },
-        { k: 'アブダビ乗継', es: '22:20→00:25', jp: '05:20→07:25', act: '起きて歩く', sleep: false },
-        { k: 'EY101 アブダビ→マドリード', es: '00:25→08:10', jp: '07:25→15:10', act: 'できるだけ寝る', sleep: true },
-        { k: 'マドリード到着日', es: '08:10→22:00', jp: '15:10→05:00', act: '日光を浴び、22時頃まで起きる', sleep: false },
-      ] },
-      { h: '帰り 10/20〜21', rows: [
-        { k: 'EY112 バルセロナ→アブダビ', es: '10:45→17:20', jp: '17:45→00:20', act: 'なるべく起きておく', sleep: false },
-        { k: 'アブダビ乗継', es: '17:20→19:25', jp: '00:20→02:25', act: '軽く食べて寝る準備', sleep: false },
-        { k: 'EY800 アブダビ→成田', es: '19:25→05:45', jp: '02:25→12:45', act: '離陸後すぐ寝る', sleep: true },
-        { k: '帰国日', es: '—', jp: '12:45→23:00', act: '日光を浴び、22〜23時まで起きる', sleep: false },
-      ] },
-    ],
-    tips: [
-      '日本→スペインは体内時計を遅らせる方向なので比較的楽。多少ずれても2日目には慣れることが多いので、行きは時間合わせより睡眠量を優先',
-      '帰りは早める方向でつらくなりがち。EY800の前半にどれだけ寝られるかが勝負',
-      '機内のお酒は眠りが浅くなるので控えめに。水をこまめに',
-      '乗った時点で時計を到着地の時間に。行動を合わせやすくなる',
-      '一番効くのは光：朝は日光を浴び、夜はスマホの画面を暗めに',
-      '10/13の夜はしっかり寝ておく（出発日は18:00発なので朝もゆっくりでOK）',
-      '睡眠薬やサプリを使う場合は、事前に医師・薬剤師に相談を',
-    ],
-  },
-  checklist: [
-    'パスポート（残存期間3か月以上）', '予約確認書PDF（スマホに保存＋印刷）', 'クレジットカード 2枚以上', '変換プラグ（Cタイプ）',
-    'モバイルバッテリー（機内持ち込み）', 'eSIM／海外ローミングの設定', '羽織もの（朝晩・機内用）', '歩きやすい靴',
-    'Visit Japan Web の登録（帰国用）', 'ブエリングのオンラインチェックイン（10/17）', 'グラナダの空港タクシー予約（10/17）', 'トレド・AVEのチケットをスマホに保存',
-  ],
+const sv='https://vietnam.travel/things-to-do/12-traditional-vietnamese-souvenirs';
+window.SOUVENIRS=[{city:'ハノイ',en:'Hanoi',theme:'saffron',items:[
+ {name:'ベトナムコーヒー・フィン',price:'店頭で確認',desc:'コーヒーと金属の抽出フィルター。豆・粉の違いと賞味期限を確認して選ぶ候補。',shop:'Hanoi Vietnamese coffee phin',url:sv},
+ {name:'漆の小物',price:'店頭で確認',desc:'ベトナムの工芸品。小さな箱やトレーなど、持ち帰りやすいサイズを選ぶ候補。',shop:'Hanoia Hanoi',url:sv},
+ {name:'シルクの小物',price:'店頭で確認',desc:'スカーフなどの候補。素材・品質表示を確かめて選びます。',shop:'Hanoi silk shop',url:sv}
+]}];
+window.SOUVENIR_NOTES=['買い物は10/18の観光案。店舗や価格は未確定です。','液体や壊れ物は荷物条件を確認し、余裕を持って梱包。'];
+window.INFO={
+ confirmations:['10/16 港までの送迎を予約。11:00集合に間に合う出発時刻を確認。','クルーズの受付地点、10/17の下船時刻、ハノイへの帰路を確認。','香港乗継のU-Connect利用有無、搭乗券、荷物受取・再預けの要否を確認。','全4便の機内持込・預入条件と購入済みの荷物枠を確認。','10/19早朝のホテル→空港送迎を事前手配。'],
+ baggage:['購入運賃と追加購入によって手荷物枠が異なります。4便それぞれの予約内容を確認。','香港での自動荷物乗継はU-Connect等の条件を確認。通し扱いとは断定できません。','座席割当と予約番号は確認書PDFを参照。'],
+ checklist:['パスポート','航空券・ホテル・クルーズ確認書（オフライン保存）','10/16 港までの送迎確認','クルーズ受付地点・下船時刻・帰路確認','香港乗継と荷物条件の確認','10/19 空港送迎確認','財布・カード','スマートフォン・充電器','モバイルバッテリー（航空会社の条件を確認）','通信手段・オフライン地図','羽織もの','歩きやすい靴','雨具','常備薬','旅行保険の連絡先'],
+ jetlag:{lead:'ハノイは日本より2時間、香港は1時間遅れ。往路の夜間移動と香港での長い待ち時間に合わせて休息を確保します。',legs:[
+ {h:'往路・10/14〜15',rows:[{k:'成田出発',es:'10/14 19:35',jp:'10/14 21:35',act:'香港到着は現地10/15 01:30。'},{k:'香港乗継',es:'10/15 00:30〜06:40',jp:'10/15 02:30〜08:40',act:'香港現地01:30〜07:40。搭乗手続き・ゲートを確認してから休息。',sleep:true},{k:'ハノイ到着',es:'10/15 08:50',jp:'10/15 10:50',act:'ホテルへ。観光は体調に合わせて調整。'}]},
+ {h:'復路・10/19',rows:[{k:'ハノイ出発',es:'10/19 09:35',jp:'10/19 11:35',act:'早朝の空港送迎を手配。'},{k:'香港乗継',es:'10/19 11:40〜14:10',jp:'10/19 13:40〜16:10',act:'香港現地12:40〜15:10。荷物とゲートを確認。'},{k:'成田到着',es:'10/19 18:40',jp:'10/19 20:40',act:'同日夜に帰国。'}]}
+ ],tips:['アイマスク・耳栓・羽織ものを用意。','香港とハノイの時計を混同しないよう、便ごとの出発地の時刻で確認。']},
+ emergency:[{k:'警察（ベトナム）',v:'113'},{k:'消防（ベトナム）',v:'114'},{k:'救急（ベトナム）',v:'115'}],
+ tips:[{k:'時刻',v:'全日程は各現地時刻。香港は日本−1時間、ハノイは−2時間。'},{k:'通貨',v:'ベトナムドン（VND）。香港での買い物は香港ドル（HKD）。'},{k:'集合',v:'10/16 11:00は確定。07:00出発・10:15港着は移動目安。'},{k:'地図',v:'ピンは目安。クルーズ受付はLot 41Aの場所を事前確認。線は移動の概略。'},{k:'未定事項',v:'観光の順番、下船時刻、送迎、部屋・食事条件は確認後に更新。'}],
+ sources:[{label:'香港エクスプレス：荷物FAQ',url:'https://www.hkexpress.com/ja/Need-help/Customer-Care/baggage-faq'},{label:'香港国際空港：乗継案内',url:'https://www.hongkongairport.com/en/passenger-guide/transfer-transit/'},{label:'ベトナム政府観光局：ハノイ',url:'https://vietnam.travel/places-to-go/northern-vietnam/ha-noi'},{label:'在ベトナム日本国大使館',url:'https://www.vn.emb-japan.go.jp/'},{label:'大使館：安全の手引き・緊急連絡先',url:'https://www.vn.emb-japan.go.jp/files/100954888.pdf'}]
 };
-
-// フレーズ集（lang: 読み上げ言語）
-window.PHRASES = [
-  {
-    h: 'あいさつ', en: 'Saludos', items: [
-      { es: 'Hola', kana: 'オラ', ja: 'こんにちは（いつでも使える）' },
-      { es: 'Buenos días', kana: 'ブエノス ディアス', ja: 'おはようございます（昼食まで）' },
-      { es: 'Buenas tardes', kana: 'ブエナス タルデス', ja: 'こんにちは（昼食後〜夕方）' },
-      { es: 'Buenas noches', kana: 'ブエナス ノチェス', ja: 'こんばんは／おやすみなさい' },
-      { es: 'Adiós', kana: 'アディオス', ja: 'さようなら' },
-      { es: 'Hasta luego', kana: 'アスタ ルエゴ', ja: 'またね（お店を出るときにも）' },
-    ],
-  },
-  {
-    h: '基本', en: 'Básico', items: [
-      { es: 'Gracias', kana: 'グラシアス', ja: 'ありがとう' },
-      { es: 'Muchas gracias', kana: 'ムチャス グラシアス', ja: 'どうもありがとう' },
-      { es: 'Por favor', kana: 'ポル ファボール', ja: 'お願いします' },
-      { es: 'De nada', kana: 'デ ナダ', ja: 'どういたしまして' },
-      { es: 'Perdón', kana: 'ペルドン', ja: 'すみません（通してください／ごめんなさい）' },
-      { es: 'Disculpe', kana: 'ディスクルペ', ja: 'すみません（呼び止めるとき）' },
-      { es: 'Sí / No', kana: 'シ／ノ', ja: 'はい／いいえ' },
-      { es: 'Vale', kana: 'バレ', ja: 'OK・了解（スペインでよく使う）' },
-    ],
-  },
-  {
-    h: 'レストラン・お店', en: 'Restaurante y tiendas', items: [
-      { es: 'Una mesa para tres, por favor', kana: 'ウナ メサ パラ トレス、ポル ファボール', ja: '3人です（席をお願いします）' },
-      { es: 'La carta, por favor', kana: 'ラ カルタ、ポル ファボール', ja: 'メニューをください' },
-      { es: '¿Qué me recomienda?', kana: 'ケ メ レコミエンダ？', ja: 'おすすめは何ですか？' },
-      { es: 'Esto, por favor', kana: 'エスト、ポル ファボール', ja: 'これをください（指さしで）' },
-      { es: 'Agua sin gas', kana: 'アグア シン ガス', ja: '炭酸なしの水' },
-      { es: 'Está muy rico', kana: 'エスタ ムイ リコ', ja: 'とてもおいしいです' },
-      { es: 'La cuenta, por favor', kana: 'ラ クエンタ、ポル ファボール', ja: 'お会計をお願いします' },
-      { es: '¿Puedo pagar con tarjeta?', kana: 'プエド パガール コン タルヘタ？', ja: 'カードで払えますか？' },
-      { es: '¿Cuánto cuesta?', kana: 'クアント クエスタ？', ja: 'いくらですか？' },
-      { es: 'Solo estoy mirando', kana: 'ソロ エストイ ミランド', ja: '見ているだけです' },
-      { es: 'Tax free, por favor', kana: 'タックス フリー、ポル ファボール', ja: '免税の書類をお願いします' },
-    ],
-  },
-  {
-    h: '移動・困ったとき', en: 'Transporte y ayuda', items: [
-      { es: '¿Dónde está el baño?', kana: 'ドンデ エスタ エル バーニョ？', ja: 'トイレはどこですか？' },
-      { es: '¿Dónde está la estación?', kana: 'ドンデ エスタ ラ エスタシオン？', ja: '駅はどこですか？' },
-      { es: 'A esta dirección, por favor', kana: 'ア エスタ ディレクシオン、ポル ファボール', ja: 'この住所までお願いします（タクシーで画面を見せて）' },
-      { es: 'Al aeropuerto, por favor', kana: 'アル アエロプエルト、ポル ファボール', ja: '空港までお願いします' },
-      { es: 'No hablo español', kana: 'ノ アブロ エスパニョール', ja: 'スペイン語は話せません' },
-      { es: '¿Habla inglés?', kana: 'アブラ イングレス？', ja: '英語を話せますか？' },
-      { es: '¡Ayuda!', kana: 'アユダ！', ja: '助けて！' },
-      { es: 'Necesito un médico', kana: 'ネセシト ウン メディコ', ja: '医者が必要です' },
-      { es: 'Me han robado', kana: 'メ アン ロバード', ja: '盗まれました' },
-    ],
-  },
-  {
-    h: 'バルセロナで（カタルーニャ語）', en: 'Català', note: 'スペイン語でも通じます。ひと言添えると喜ばれます。', items: [
-      { es: 'Bon dia', kana: 'ボン ディア', ja: 'おはよう／こんにちは', lang: 'ca-ES' },
-      { es: 'Bona tarda', kana: 'ボナ タルダ', ja: 'こんにちは（午後）', lang: 'ca-ES' },
-      { es: 'Gràcies', kana: 'グラシエス', ja: 'ありがとう', lang: 'ca-ES' },
-      { es: 'Si us plau', kana: 'シウスプラウ', ja: 'お願いします', lang: 'ca-ES' },
-      { es: 'Adéu', kana: 'アデウ', ja: 'さようなら', lang: 'ca-ES' },
-    ],
-  },
+window.PHRASES=[
+ {h:'あいさつ・基本',en:'Greetings',note:'声調があるためカタカナは目安。端末に対応音声がない場合は文字を見せてください。',items:[{es:'Xin chào',kana:'シン チャオ',ja:'こんにちは'},{es:'Cảm ơn',kana:'カム オン',ja:'ありがとう'},{es:'Xin lỗi',kana:'シン ロイ',ja:'すみません／ごめんなさい'},{es:'Vâng',kana:'ヴァン',ja:'はい'},{es:'Không',kana:'ホン',ja:'いいえ'}]},
+ {h:'食事・買い物',en:'Food & Shopping',items:[{es:'Cho tôi cái này',kana:'チョー トイ カイ ナイ',ja:'これをください'},{es:'Bao nhiêu tiền?',kana:'バオ ニエウ ティエン',ja:'いくらですか？'},{es:'Tính tiền',kana:'ティン ティエン',ja:'お会計をお願いします'},{es:'Không cay',kana:'ホン カイ',ja:'辛くしないでください'}]},
+ {h:'移動・困ったとき',en:'Getting Around',items:[{es:'Nhà vệ sinh ở đâu?',kana:'ニャー ヴェ シン オー ダウ',ja:'トイレはどこですか？'},{es:'Bạn có nói tiếng Anh không?',kana:'バン コー ノイ ティエン アイン ホン',ja:'英語を話せますか？'},{es:'Làm ơn giúp tôi',kana:'ラム オン ズップ トイ',ja:'助けてください'}]}
 ];

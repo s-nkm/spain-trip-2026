@@ -6,15 +6,15 @@
 
   // ---------- utils ----------
   const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const gmaps = (p) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.en + ' ' + p.lat + ',' + p.lng)}`;
+  const gmaps = (p) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.query || (p.en + ' ' + p.lat + ',' + p.lng))}`;
   const gmapsQ = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-  const gdir = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
+  const gdir = (p) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.query || (p.lat + "," + p.lng))}`;
   const near = (kw, p) => `https://www.google.com/maps/search/${encodeURIComponent(kw)}/@${p.lat},${p.lng},16z`;
   const color = (name) => getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim();
 
-  // スペイン時間の今日（YYYY-MM-DD）
-  const todayMadrid = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
-  const todayDay = () => DAYS.find((d) => d.date === todayMadrid());
+  // ハノイ時間の今日（YYYY-MM-DD）
+  const todayLocal = () => new Intl.DateTimeFormat('en-CA', { timeZone: TRIP.timezone }).format(new Date());
+  const todayDay = () => DAYS.find((d) => d.date === todayLocal());
   const daysUntil = () => Math.ceil((new Date(TRIP.start + 'T00:00:00+09:00') - new Date()) / 86400000);
   const md = (iso) => { const [, m, d] = iso.split('-'); return `${+m}/${+d}`; };
 
@@ -37,7 +37,7 @@
     </div>`;
   }
 
-  const badge = (tag) => tag ? `<span class="badge ${tag}">${{ booked: '予約済', plan: '予定', tip: 'TIP', sleep: '睡眠' }[tag]}</span>` : '';
+  const badge = (tag) => tag ? `<span class="badge ${tag}">${{ booked: '予約済', plan: '観光案', tip: 'TIP', sleep: '休息', confirmed: '確定', estimate: '目安', confirm: '要確認' }[tag]}</span>` : '';
 
   function timelineItem(it) {
     if (it.move) {
@@ -47,13 +47,13 @@
     return `<li class="tl-item reveal${it.tag === 'sleep' ? ' is-sleep' : ''}"><div class="tl-time">${esc(it.time)}</div><div class="tl-body">
       <h3>${esc(it.title)} ${badge(it.tag)}</h3>
       ${it.note ? `<p>${esc(it.note)}</p>` : ''}
-      ${it.jet ? `<div class="tl-actions"><a class="btn-link in-site" href="#/info/jetlag">時差ボケ対策を詳しく</a></div>` : ''}
+      ${it.jet ? `<div class="tl-actions"><a class="btn-link in-site" href="#/info/jetlag">時差・休息の目安を詳しく</a></div>` : ''}
       ${p ? `<div class="tl-actions"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">経路案内</a></div>` : ''}
     </div></li>`;
   }
 
   function footer() {
-    return `<div class="tile-band"></div><footer class="footer"><span class="display">¡Buen viaje!</span>${esc(TRIP.subtitle)} ・ 予約番号などは確認書PDFを参照</footer>`;
+    return `<div class="tile-band"></div><footer class="footer"><span class="display">Have a lovely journey!</span>${esc(TRIP.subtitle)} ・ 予約番号などは確認書PDFを参照</footer>`;
   }
 
   // ---------- map ----------
@@ -106,7 +106,7 @@
       const k = KIND[p.kind] || KIND.sight;
       const icon = L.divIcon({ className: '', html: `<div class="pin" style="--pin:${color(k.c) || color('ink')}"><span>${k.l}</span></div>`, iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
       L.marker([p.lat, p.lng], { icon }).addTo(map).bindPopup(
-        `<b>${esc(p.name)}</b><br><span style="opacity:.7">${esc(p.en)}</span>${p.addr ? `<br>${esc(p.addr)}` : ''}${p.tel ? `<br><a href="tel:${p.tel}">${p.tel}</a>` : ''}<br><a href="${gmaps(p)}" target="_blank" rel="noopener">Googleマップ ↗</a>　<a href="${gdir(p)}" target="_blank" rel="noopener">経路案内 ↗</a>`
+        `<b>${esc(p.name)}</b><br>${p.mapNote ? esc(p.mapNote) + '<br>' : ''}<span style="opacity:.7">${esc(p.en)}</span>${p.addr ? `<br>${esc(p.addr)}` : ''}${p.tel ? `<br><a href="tel:${p.tel}">${p.tel}</a>` : ''}<br><a href="${gmaps(p)}" target="_blank" rel="noopener">Googleマップ ↗</a>　<a href="${gdir(p)}" target="_blank" rel="noopener">経路案内 ↗</a>`
       );
       bounds.push([p.lat, p.lng]);
     });
@@ -133,23 +133,6 @@
   const legend = `<div class="map-legend"><span><i style="border-color:var(--cobalt);border-top-style:dotted"></i>飛行機</span><span><i style="border-color:var(--terra)"></i>鉄道・地下鉄</span><span><i style="border-color:var(--olive);border-top-style:dashed"></i>車・タクシー</span><span><i style="border-color:var(--muted);border-top-style:dotted"></i>徒歩</span></div>`;
 
   // ---------- views ----------
-  const heroArt = `<svg viewBox="0 0 400 190" role="img" aria-label="スペインの街並みのイラスト">
-    <rect width="400" height="190" fill="#E7B98F"/>
-    <circle cx="318" cy="62" r="30" fill="#F4D48A"/>
-    <path d="M0 132 Q60 112 120 126 T250 120 T400 116 V190 H0Z" fill="#C9724B"/>
-    <g fill="#9C4A2B">
-      <rect x="28" y="96" width="44" height="40"/><rect x="40" y="78" width="20" height="20"/><path d="M40 78 L50 64 L60 78Z"/>
-      <rect x="88" y="104" width="62" height="32"/><rect x="96" y="90" width="12" height="16"/><rect x="132" y="90" width="12" height="16"/>
-    </g>
-    <g fill="#7E3A20">
-      <path d="M232 136 V86 Q236 54 240 86 V136Z"/><path d="M246 136 V72 Q251 30 256 72 V136Z"/><path d="M262 136 V78 Q267 40 272 78 V136Z"/><path d="M278 136 V92 Q282 62 286 92 V136Z"/>
-      <rect x="226" y="112" width="66" height="26"/>
-    </g>
-    <path d="M0 150 Q100 136 200 148 T400 144 V190 H0Z" fill="#6E7A4A"/>
-    <path d="M0 168 Q120 158 220 168 T400 164 V190 H0Z" fill="#4F5A33"/>
-    <g fill="#F4EEE3" opacity=".85"><rect x="46" y="104" width="6" height="10" rx="3"/><rect x="104" y="112" width="6" height="10" rx="3"/><rect x="122" y="112" width="6" height="10" rx="3"/></g>
-  </svg>`;
-
   function viewHome() {
     const td = todayDay();
     const n = daysUntil();
@@ -160,17 +143,18 @@
     return `
       <section class="hero">
         <div class="eyebrow reveal">${md(TRIP.start)} — ${md(TRIP.end)} ・ 2026</div>
-        <h1 class="reveal">Viaje a <span>España</span></h1>
-        <p class="hero-sub reveal">${esc(TRIP.travelers)}でめぐる、8日間のスペイン。</p>
+        <h1 class="reveal">Journey to <span>Vietnam</span></h1>
+        <p class="hero-sub reveal">${esc(TRIP.travelers)}でめぐる、6日間のハノイ・ハロン湾。</p>
       </section>
       <figure class="hero-photo reveal">
-        <picture><source srcset="img/hero.avif" type="image/avif"><img src="img/hero.jpg" alt="トレド旧市街とタホ川の夕景" width="1742" height="1160" fetchpriority="high"></picture>
-        <figcaption>Toledo</figcaption>
+        <img src="img/vietnam-hero.svg" alt="ハロン湾の島々と船を描いたイラスト" width="1200" height="750" fetchpriority="high">
+        <figcaption>Hanoi · Ha Long Bay</figcaption>
       </figure>
-      <div class="route-line reveal"><b>NRT</b>→ AUH →<b>MADRID</b>→<b>TOLEDO</b>→<b>GRANADA</b>→<b>BARCELONA</b>→ AUH →<b>NRT</b></div>
+      <div class="route-line reveal"><b>NRT</b> → HKG → <b>HANOI</b> ⇄ <b>HA LONG BAY</b> → HKG → <b>NRT</b></div>
+      <section class="section" style="padding-bottom:0"><div class="callout"><b>出発前に確認</b><br>港への送迎・クルーズの下船時刻と帰路・香港での荷物取扱い・帰国日の空港送迎。<a class="btn-link in-site" href="#/info/confirmations">確認事項を見る →</a></div></section>
       ${cd}
       <section class="section">
-        <div class="section-title reveal"><h2>旅程</h2><span class="display">Itinerario</span></div>
+        <div class="section-title reveal"><h2>旅程</h2><span class="display">Itinerary</span></div>
         <ul class="day-list">
           ${DAYS.map((d) => `<li class="day-row reveal t-${d.theme}${td && td.n === d.n ? ' today' : ''}"><a href="#/day/${d.n}">
             <span class="d-num">${String(d.n).padStart(2, '0')}</span>
@@ -180,14 +164,14 @@
       </section>
       <div class="tile-band thick"></div>
       <section class="section">
-        <div class="section-title reveal"><h2>ガイド</h2><span class="display">Guía</span></div>
+        <div class="section-title reveal"><h2>ガイド</h2><span class="display">Guide</span></div>
         <div class="quick">
-          <a href="#/map" class="reveal t-terra"><span class="display">Mapa</span><span>全行程マップ</span></a>
-          <a href="#/airports" class="reveal t-cobalt"><span class="display">Aeropuertos</span><span>空港の歩き方</span></a>
-          <a href="#/souvenirs" class="reveal t-saffron"><span class="display">Recuerdos</span><span>お土産ガイド</span></a>
-          <a href="#/info" class="reveal t-olive"><span class="display">Información</span><span>ホテル・持ち物・緊急連絡先</span></a>
-          <a href="#/phrases" class="reveal t-terra"><span class="display">Frases</span><span>よく使うスペイン語</span></a>
-          <a href="#/info/jetlag" class="reveal t-cobalt"><span class="display">Jet lag</span><span>時差ボケ対策</span></a>
+          <a href="#/map" class="reveal t-terra"><span class="display">Map</span><span>全行程マップ</span></a>
+          <a href="#/airports" class="reveal t-cobalt"><span class="display">Airports</span><span>空港の歩き方</span></a>
+          <a href="#/souvenirs" class="reveal t-saffron"><span class="display">Souvenirs</span><span>お土産ガイド</span></a>
+          <a href="#/info" class="reveal t-olive"><span class="display">Information</span><span>ホテル・持ち物・緊急連絡先</span></a>
+          <a href="#/phrases" class="reveal t-terra"><span class="display">Phrases</span><span>よく使うベトナム語</span></a>
+          <a href="#/info/jetlag" class="reveal t-cobalt"><span class="display">Jet lag</span><span>時差・休息の目安</span></a>
         </div>
       </section>
       ${footer()}`;
@@ -209,14 +193,14 @@
         <p class="day-lead">${esc(d.headline)}。${esc(d.lead)}</p>
         <div class="tile-band" style="margin-top:22px"></div>
         <ol class="timeline">${d.items.map(timelineItem).join('')}</ol>
-        ${d.places.length > 1 ? `<section style="margin-top:24px"><div class="section" style="padding-bottom:12px"><div class="section-title" style="margin:0"><h2>この日の地図</h2><span class="display">Ruta</span></div></div><div id="day-map" class="map"></div>${legend}</section>` : ''}
+        ${d.places.length > 1 ? `<section style="margin-top:24px"><div class="section" style="padding-bottom:12px"><div class="section-title" style="margin:0"><h2>この日の地図</h2><span class="display">Route</span></div></div><div id="day-map" class="map"></div>${legend}</section>` : ''}
         ${nb ? `<section class="section">
-          <div class="section-title"><h2>周辺情報</h2><span class="display">Cerca</span></div>
+          <div class="section-title"><h2>周辺情報</h2><span class="display">Nearby</span></div>
           <p class="muted" style="font-size:13px;margin-bottom:12px">${esc(d.nearby.label)}のおすすめ</p>
           <div class="nearby-cards">${d.nearby.picks.map((id) => { const p = PLACES[id]; return `<a href="${gmaps(p)}" target="_blank" rel="noopener"><small>${{ food: 'EAT', shop: 'SHOP', sight: 'SEE', hotel: 'STAY' }[p.kind] || 'SEE'}</small>${esc(p.name)}</a>`; }).join('')}</div>
           <p class="sub-h">ホテル周辺をGoogleマップで探す</p>
           <div class="search-grid">
-            ${[['restaurants', '🍽 レストラン'], ['cafe', '☕ カフェ'], ['tapas bar', '🍷 バル'], ['supermarket', '🛒 スーパー'], ['pharmacy', '💊 薬局'], ['ATM', '💶 ATM']].map(([q, l]) => `<a class="chip" href="${near(q, nb)}" target="_blank" rel="noopener">${l}</a>`).join('')}
+            ${[['restaurants', '🍽 レストラン'], ['cafe', '☕ カフェ'], ['Vietnamese restaurant', '🍜 ベトナム料理'], ['supermarket', '🛒 スーパー'], ['pharmacy', '💊 薬局'], ['ATM', '🏧 ATM']].map(([q, l]) => `<a class="chip" href="${near(q, nb)}" target="_blank" rel="noopener">${l}</a>`).join('')}
           </div>
         </section>` : ''}
         <div class="day-pager">${prev ? `<a href="#/day/${prev.n}">← DAY ${prev.n}</a>` : '<span></span>'}${next ? `<a href="#/day/${next.n}">DAY ${next.n} →</a>` : '<span></span>'}</div>
@@ -226,22 +210,22 @@
   }
 
   function viewMap(filter) {
-    const opts = [['all', 'すべて'], ['spain', 'スペイン全体'], ...DAYS.filter((d) => d.places.length > 1).map((d) => [String(d.n), `${md(d.date)} ${d.city.split(' ')[0]}`])];
-    const cur = filter || 'spain';
+    const opts = [['all', 'すべて'], ['vietnam', 'ベトナム全体'], ...DAYS.filter((d) => d.places.length > 1).map((d) => [String(d.n), `${md(d.date)} ${d.city.split(' ')[0]}`])];
+    const cur = filter || 'vietnam';
     const html = `
       <section class="section" style="padding-bottom:12px">
-        <div class="section-title"><h2>全行程マップ</h2><span class="display">Mapa</span></div>
+        <div class="section-title"><h2>全行程マップ</h2><span class="display">Map</span></div>
         <div class="chips">${opts.map(([k, l]) => `<a class="chip ${k === cur ? 'on' : ''}" href="#/map/${k}">${esc(l)}</a>`).join('')}</div>
       </section>
       <div id="all-map" class="map tall"></div>${legend}
-      <p class="section muted" style="font-size:12.5px;padding-top:12px">ピンをタップすると、Googleマップでの表示や経路案内に進めます。ピンの位置は目安です。</p>`;
+      <p class="section muted" style="font-size:12.5px;padding-top:12px">ピンをタップすると、Googleマップでの表示や経路案内に進めます。ピンの位置は目安です。線は移動の概略で、実際の道順・航路ではありません。クルーズの受付地点は運航会社へ確認してください。</p>`;
     return {
       html, after: () => {
         let placeIds, routes;
-        if (cur === 'all' || cur === 'spain') {
+        if (cur === 'all' || cur === 'vietnam') {
           const all = new Set(); routes = [];
           DAYS.forEach((d) => { d.places.forEach((p) => all.add(p)); routes.push(...d.routes); });
-          if (cur === 'spain') { ['nrt', 'auh'].forEach((x) => all.delete(x)); routes = routes.filter((r) => !['nrt', 'auh'].some((x) => r.includes(x))); }
+          if (cur === 'vietnam') { ['nrt', 'hkg'].forEach((x) => all.delete(x)); routes = routes.filter((r) => !['nrt', 'hkg'].some((x) => r.includes(x))); }
           placeIds = [...all];
         } else {
           const d = DAYS.find((x) => String(x.n) === cur) || DAYS[1];
@@ -255,7 +239,7 @@
   function viewAirports() {
     return `
       <section class="section">
-        <div class="section-title"><h2>空港ガイド</h2><span class="display">Aeropuertos</span></div>
+        <div class="section-title"><h2>空港ガイド</h2><span class="display">Airports</span></div>
         <div class="chips" style="margin-bottom:18px">${AIRPORTS.map((a) => `<a class="chip" href="#/airports/${a.id}">${a.code}</a>`).join('')}</div>
         ${AIRPORTS.map((a) => `
           <article class="card reveal t-cobalt" id="ap-${a.id}">
@@ -265,7 +249,7 @@
             <p class="sub-h">流れ</p>
             <ol class="steps">${a.steps.map((s) => `<li><div><b>${esc(s.t)}</b><span>${esc(s.d)}</span></div></li>`).join('')}</ol>
             ${a.arrive.length ? `<p class="sub-h">${a.id === 'nrt' ? '帰国時' : '市内への行き方'}</p><ol class="steps">${a.arrive.map((s) => `<li><div><b>${esc(s.t)}</b><span>${esc(s.d)}</span></div></li>`).join('')}</ol>` : ''}
-            <p class="sub-h">ポイント</p>
+            <div class="chips" style="margin-top:12px">${(a.links || []).map((l) => `<a class="btn-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('')}</div><p class="sub-h">ポイント</p>
             <ul class="notes">${a.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
             <div style="margin-top:14px;display:flex;gap:16px;flex-wrap:wrap"><a class="btn-link" href="${gmaps(PLACES[a.id])}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gmapsQ(PLACES[a.id].en + ' shops')}" target="_blank" rel="noopener">空港内のショップを検索</a></div>
           </article>`).join('')}
@@ -277,7 +261,7 @@
   function viewSouvenirs() {
     return `
       <section class="section">
-        <div class="section-title"><h2>お土産ガイド</h2><span class="display">Recuerdos</span></div>
+        <div class="section-title"><h2>お土産ガイド</h2><span class="display">Souvenirs</span></div>
         ${SOUVENIR_NOTES.map((n) => `<div class="callout reveal">${esc(n)}</div>`).join('')}
       </section>
       <div class="tile-band"></div>
@@ -285,9 +269,9 @@
         ${SOUVENIRS.map((c) => `
           <div class="sv-city t-${c.theme}">
             <div class="sv-head reveal"><h3>${esc(c.city)}</h3><span class="display">${esc(c.en)}</span></div>
-            ${c.items.map((it) => `<div class="sv-item reveal"><h4>${esc(it.name)}</h4><span class="sv-price">${esc(it.price)}</span><p>${esc(it.desc)}</p>${it.shop ? `<a class="btn-link" href="${gmapsQ(it.shop)}" target="_blank" rel="noopener">${esc(it.shop)}</a>` : ''}</div>`).join('')}
+            ${c.items.map((it) => `<div class="sv-item reveal"><h4>${esc(it.name)}</h4><span class="sv-price">${esc(it.price)}</span><p>${esc(it.desc)}</p>${it.url ? `<a class="btn-link" href="${esc(it.url)}" target="_blank" rel="noopener">公式観光ガイド ↗</a> ` : ''}${it.shop ? `<a class="btn-link" href="${gmapsQ(it.shop)}" target="_blank" rel="noopener">${esc(it.shop)}</a>` : ''}</div>`).join('')}
           </div>`).join('')}
-        <p class="muted" style="font-size:12px;margin-top:20px">※ 価格は目安です。店舗の営業時間や取り扱い商品は変わることがあります。</p>
+        <p class="muted" style="font-size:12px;margin-top:20px">※ 価格は店頭で確認してください。店舗の営業時間や取り扱い商品は変わることがあります。</p>
       </section>
       ${footer()}`;
   }
@@ -301,7 +285,7 @@
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang;
     u.rate = 0.85;
-    u.voice = voices.find((v) => v.lang.replace('_', '-') === lang) || voices.find((v) => v.lang.startsWith('es')) || null;
+    u.voice = voices.find((v) => v.lang.replace('_', '-') === lang) || voices.find((v) => v.lang.startsWith(lang.split('-')[0])) || null;
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   }
@@ -310,7 +294,7 @@
     return {
       html: `
       <section class="section">
-        <div class="section-title"><h2>フレーズ集</h2><span class="display">Frases</span></div>
+        <div class="section-title"><h2>フレーズ集</h2><span class="display">Phrases</span></div>
         <p class="muted" style="font-size:13px">${canSpeak ? 'スピーカーのボタンで発音を聞けます。そのまま相手に聞かせてもOK。' : 'カタカナはおおよその読み方です。'}</p>
         <div class="chips" style="margin-top:14px">${PHRASES.map((g, i) => `<a class="chip" href="#/phrases/${i}">${esc(g.h)}</a>`).join('')}</div>
       </section>
@@ -320,8 +304,8 @@
           <div class="sv-head reveal"><h3>${esc(g.h)}</h3><span class="display">${esc(g.en)}</span></div>
           ${g.note ? `<p class="muted" style="font-size:12.5px;margin-top:10px">${esc(g.note)}</p>` : ''}
           <ul class="phrase-list">${g.items.map((p) => `<li class="reveal">
-            <div class="ph-text"><div class="ph-es" lang="${p.lang || 'es-ES'}">${esc(p.es)}</div><div class="ph-kana">${esc(p.kana)}</div><div class="ph-ja">${esc(p.ja)}</div></div>
-            ${canSpeak ? `<button type="button" class="ph-say" data-say="${esc(p.es)}" data-lang="${p.lang || 'es-ES'}" aria-label="${esc(p.es)} を読み上げ">${speakerIcon}</button>` : ''}
+            <div class="ph-text"><div class="ph-es" lang="${p.lang || TRIP.language}">${esc(p.es)}</div><div class="ph-kana">${esc(p.kana)}</div><div class="ph-ja">${esc(p.ja)}</div></div>
+            ${canSpeak ? `<button type="button" class="ph-say" data-say="${esc(p.es)}" data-lang="${p.lang || TRIP.language}" aria-label="${esc(p.es)} を読み上げ">${speakerIcon}</button>` : ''}
           </li>`).join('')}</ul>
         </section>`).join('')}
       ${footer()}`,
@@ -334,56 +318,58 @@
 
   function viewInfo() {
     let checked = {};
-    try { checked = JSON.parse(localStorage.getItem('checklist') || '{}'); } catch (e) { /* ignore */ }
+    try { checked = JSON.parse(localStorage.getItem('checklist-vietnam-2026') || '{}'); } catch (e) { /* ignore */ }
     return {
       html: `
+      <section class="section" id="info-confirmations"><div class="section-title"><h2>出発前の確認事項</h2><span class="display">Before departure</span></div><ul class="notes">${INFO.confirmations.map((c) => `<li>${esc(c)}</li>`).join('')}</ul></section>
       <section class="section">
-        <div class="section-title"><h2>ホテル</h2><span class="display">Hoteles</span></div>
+        <div class="section-title"><h2>ホテル・クルーズ</h2><span class="display">Stays</span></div>
         ${HOTELS.map((h) => { const p = PLACES[h.place]; return `<article class="card reveal">
           <span class="eyebrow">${esc(h.city)}</span><h3 style="margin-top:4px">${esc(p.name)}</h3><span class="display muted" style="font-size:16px">${esc(p.en)}</span>
-          <dl class="kv"><dt>宿泊</dt><dd>${esc(h.nights)}</dd><dt>チェックイン</dt><dd>${esc(h.in)}</dd><dt>チェックアウト</dt><dd>${esc(h.out)}</dd><dt>部屋</dt><dd>${esc(h.room)}</dd><dt>食事</dt><dd>${esc(h.meal)}</dd><dt>住所</dt><dd>${esc(p.addr)}</dd><dt>電話</dt><dd><a href="tel:${p.tel}">${p.tel}</a></dd><dt>メモ</dt><dd>${esc(h.note)}</dd></dl>
+          <dl class="kv"><dt>宿泊</dt><dd>${esc(h.nights)}</dd><dt>チェックイン</dt><dd>${esc(h.in)}</dd><dt>チェックアウト</dt><dd>${esc(h.out)}</dd><dt>部屋</dt><dd>${esc(h.room)}</dd><dt>食事</dt><dd>${esc(h.meal)}</dd><dt>住所</dt><dd>${esc(p.addr)}</dd>${p.tel ? `<dt>電話</dt><dd><a href="tel:${p.tel}">${esc(p.tel)}</a></dd>` : ''}<dt>メモ</dt><dd>${esc(h.note)}</dd></dl>
           <div style="margin-top:12px;display:flex;gap:16px"><a class="btn-link" href="${gmaps(p)}" target="_blank" rel="noopener">地図</a><a class="btn-link" href="${gdir(p)}" target="_blank" rel="noopener">経路案内</a></div>
         </article>`; }).join('')}
         <p class="muted" style="font-size:12px;margin-top:12px">確認番号・予約番号は、予約確認書PDFの原本を見てください。</p>
       </section>
       <div class="tile-band"></div>
       <section class="section">
-        <div class="section-title"><h2>フライト・鉄道</h2><span class="display">Transporte</span></div>
+        <div class="section-title"><h2>フライト</h2><span class="display">Transport</span></div>
         <div style="display:grid;gap:12px">${Object.values(MOVES).map((m) => `<div class="reveal t-${m.type === 'train' ? 'terra' : 'cobalt'}">${ticket(m)}</div>`).join('')}</div>
         <p class="sub-h">手荷物</p>
         <ul class="notes t-cobalt">${INFO.baggage.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
       </section>
       <section class="section">
-        <div class="section-title"><h2>持ち物チェック</h2><span class="display">Lista</span></div>
+        <div class="section-title"><h2>持ち物チェック</h2><span class="display">Checklist</span></div>
         <ul class="check">${INFO.checklist.map((c, i) => `<li><label><input type="checkbox" data-i="${i}" ${checked[i] ? 'checked' : ''}><span>${esc(c)}</span></label></li>`).join('')}</ul>
         <p class="muted" style="font-size:12px;margin-top:8px">チェックはこの端末にだけ保存されます。</p>
       </section>
       <section class="section" id="info-jetlag">
-        <div class="section-title"><h2>時差ボケ対策</h2><span class="display">Jet lag</span></div>
+        <div class="section-title"><h2>時差・休息の目安</h2><span class="display">Jet lag</span></div>
         <p style="font-size:13.5px">${esc(INFO.jetlag.lead)}</p>
         ${INFO.jetlag.legs.map((leg) => `
           <p class="sub-h">${esc(leg.h)}</p>
           <ol class="jet-list">${leg.rows.map((r) => `<li class="${r.sleep ? 'is-sleep' : ''}">
             <div class="jet-k">${esc(r.k)}</div>
-            <div class="jet-t"><span>スペイン ${esc(r.es)}</span><span>日本 ${esc(r.jp)}</span></div>
+            <div class="jet-t"><span>ハノイ ${esc(r.es)}</span><span>日本 ${esc(r.jp)}</span></div>
             <div class="jet-act">${esc(r.act)}</div>
           </li>`).join('')}</ol>`).join('')}
         <p class="sub-h">コツ</p>
         <ul class="notes">${INFO.jetlag.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
       </section>
       <section class="section">
-        <div class="section-title"><h2>緊急連絡先</h2><span class="display">Emergencia</span></div>
+        <div class="section-title"><h2>緊急連絡先</h2><span class="display">Emergency</span></div>
         <ul class="tel-list card">${INFO.emergency.map((e) => `<li><span>${esc(e.k)}</span><a href="tel:${e.v.replace(/-/g, '')}">${esc(e.v)}</a></li>`).join('')}</ul>
       </section>
       <section class="section">
-        <div class="section-title"><h2>旅のメモ</h2><span class="display">Consejos</span></div>
+        <div class="section-title"><h2>旅のメモ</h2><span class="display">Notes</span></div>
         <dl class="kv" style="grid-template-columns:96px 1fr;gap:12px">${INFO.tips.map((t) => `<dt>${esc(t.k)}</dt><dd>${esc(t.v)}</dd>`).join('')}</dl>
       </section>
+      <section class="section"><div class="section-title"><h2>参考・公式情報</h2><span class="display">Sources</span></div><p class="muted" style="font-size:12px">旅程：ハノイスケジュールv02.pdf。フライト・宿泊・集合時刻はPDFより。氏名・予約番号は原本を参照。</p><ul class="notes">${INFO.sources.map((l) => `<li><a class="btn-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a></li>`).join('')}</ul></section>
       ${footer()}`,
       after: () => {
         app.querySelectorAll('.check input').forEach((el) => el.addEventListener('change', () => {
           checked[el.dataset.i] = el.checked;
-          try { localStorage.setItem('checklist', JSON.stringify(checked)); } catch (e) { /* ignore */ }
+          try { localStorage.setItem('checklist-vietnam-2026', JSON.stringify(checked)); } catch (e) { /* ignore */ }
         }));
       },
     };
@@ -426,8 +412,8 @@
   }
 
   function topbarDate() {
-    const t = new Intl.DateTimeFormat('ja-JP', { timeZone: 'Europe/Madrid', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date());
-    document.getElementById('topbar-date').textContent = `MADRID ${t}`;
+    const t = new Intl.DateTimeFormat('ja-JP', { timeZone: TRIP.timezone, month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date());
+    document.getElementById('topbar-date').textContent = `HANOI ${t}`;
   }
 
   window.addEventListener('hashchange', render);
@@ -458,3 +444,4 @@
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 })();
+

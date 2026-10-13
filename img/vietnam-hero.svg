@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title">
+  <title id="title">ハロン湾の島々とクルーズ船のイラスト</title>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#eee1c9"/><stop offset="1" stop-color="#d2dfd6"/></linearGradient>
+    <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#749e9a"/><stop offset="1" stop-color="#315c60"/></linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1200v750H0z"/>
+  <circle cx="928" cy="172" r="63" fill="#e9b972"/>
+  <path fill="#a0b6aa" d="M0 413l30-94 36-32 20 7 31-42 50 27 34 134 54-11 32-112 28-19 40 44 25 100 47-157 36-22 49 70 18 115 66-5 42-86 20-122 32-42 37 26 41 118 28 78 118 12 42-93 35-16 50 47 27 83 87-12 60-126 37-32 27 24 38 123 36-20 14-66 30-40 56 124v191H0z"/>
+  <path fill="#577e72" d="M0 518l58-39 12-96 42-79 48-14 24 57 13 158 28 37 82-16 24-86 17-112 37-36 40 21 26 92 28 108 91-25 22-101 19-53 45-40 42 19 21 158 28 47 110-17 44-137 23-95 34-37 41 39 33 126 20 88 140 2 32-36 12-78 34-17 27 66 40 52v270H0z"/>
+  <path fill="url(#sea)" d="M0 535q135-35 278-4t302-4 292 7 328-12v228H0z"/>
+  <path d="M49 590h200m120 15h183m367-28h173M86 654h214m474-16h156m-448 65h202m318-28h131" stroke="#b6c9bb" stroke-width="3" opacity=".4"/>
+  <g transform="translate(604 504)">
+    <path d="M-121 80H141l-22 34H-95z" fill="#eee2cc"/>
+    <path d="M-101 50H118v30H-101z" fill="#f8efdf"/>
+    <path d="M-78 22H82v28H-78z" fill="#eee2cc"/>
+    <path d="M-59 3H58v19H-59z" fill="#38585b"/>
+    <path d="M-74 56h29m13 0H-3m13 0h29m13 0h29m-145-23h25m14 0h25m14 0h25" stroke="#38585b" stroke-width="9"/>
+    <path d="M-118 83h257" stroke="#b5532f" stroke-width="5"/>
+  </g>
+  <path d="M47 700q183-11 348 0m134-72q96-8 210 0" stroke="#d9e1ce" stroke-width="3" fill="none" opacity=".45"/>
+</svg>

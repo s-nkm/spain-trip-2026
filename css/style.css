@@ -327,3 +327,11 @@ body { transition: background-color .3s, color .3s; }
 
 /* Cormorantの数字はオールドスタイルで上下に揺れるため、揃い数字にする */
 .countdown .num, .day-row .d-num, .day-hero .big, .day-strip a b, .hero h1, .display { font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1; }
+
+
+/* ベトナム旅：長い英字タイトルと確認状況 */
+.hero h1 { font-size: clamp(34px, 9vw, 64px); white-space: normal; }
+.badge.confirmed { background: var(--olive); color: var(--paper, #fff); }
+.badge.estimate, .badge.confirm { color: var(--terra); border: 1px solid currentColor; }
+.tl-time { overflow-wrap: anywhere; }
+.hero-photo img { animation: none; }
